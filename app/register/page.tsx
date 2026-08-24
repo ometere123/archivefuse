@@ -1,5 +1,5 @@
 "use client";
-import { FormEvent, useState } from "react";
+import { FormEvent, Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { TransactionRail } from "@/components/transaction-rail";
 import { useContractWrite } from "@/lib/use-write";
@@ -7,19 +7,17 @@ import { useContractWrite } from "@/lib/use-write";
 const digestHelp = "64 hex characters, optionally prefixed sha256:";
 const arr = (value: string) => JSON.stringify(value.split("\n").map(v=>v.trim()).filter(Boolean));
 
-export default function RegisterPage() {
+function RegisterPageInner() {
   const params = useSearchParams();
   const [mode,setMode]=useState<"archive"|"record">(params.get("archive") ? "record" : "archive");
   const tx=useContractWrite();
   const [archiveId,setArchiveId]=useState(params.get("archive") ?? "1");
   async function createArchive(e:FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const f=new FormData(e.currentTarget);
+    e.preventDefault(); const f=new FormData(e.currentTarget);
     try { await tx.run("create_archive",[String(f.get("name")),String(f.get("charterUrl")),String(f.get("digest")),BigInt(String(f.get("cutoff")))]); } catch {}
   }
   async function registerRecord(e:FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const f=new FormData(e.currentTarget);
+    e.preventDefault(); const f=new FormData(e.currentTarget);
     try { await tx.run("register_record",[BigInt(archiveId),BigInt(String(f.get("type"))),String(f.get("title")),String(f.get("summary")),String(f.get("sourceUrl")),String(f.get("digest")),arr(String(f.get("names"))),arr(String(f.get("dates"))),arr(String(f.get("places"))),arr(String(f.get("roles"))),BigInt(String(f.get("latestYear")||"0"))]); } catch {}
   }
   return <main className="page registrar-page">
@@ -34,3 +32,5 @@ export default function RegisterPage() {
   </main>;
 }
 function WriteGate({tx}:{tx:ReturnType<typeof useContractWrite>}) { return !tx.canWrite ? <div className="write-gate"><strong>Signature gate</strong><span>{tx.writeBlockedReason}</span>{tx.network==="wrong"?<button type="button" onClick={tx.switchNetwork}>Switch to StudioNet</button>:!tx.address?<button type="button" onClick={tx.connect}>Connect injected wallet</button>:null}</div>:<div className="write-gate ready"><strong>Ready to sign</strong><span>{tx.address?.slice(0,8)}… · StudioNet 61999</span></div>; }
+
+export default function RegisterPage(){return <Suspense fallback={<main className="page"><div className="folio-state">Opening registrar desk…</div></main>}><RegisterPageInner/></Suspense>}
