@@ -40,12 +40,17 @@ const verifiedTransactions = [];
 for (const item of manifest.transactions || []) if (item.hash) verifiedTransactions.push({ ...item, ...(await verifyTransaction(item.hash)) });
 
 const stats = await client.readContract({ address, functionName: "stats", args: [] });
-const archive = await client.readContract({ address, functionName: "get_archive", args: [1n] });
-const expectedArchive = manifest.archive.state;
-check("archive exists", archive.id === expectedArchive.id);
-check("archive steward", archive.steward.toLowerCase() === expectedArchive.steward.toLowerCase());
-check("archive cutoff", archive.cutoff_year === expectedArchive.cutoff_year);
-check("archive charter binding", archive.charter_url === expectedArchive.charter_url && archive.charter_digest === expectedArchive.charter_digest);
+const archiveEntries = [manifest.archive, manifest.archive2].filter(Boolean);
+const archives = [];
+for (const entry of archiveEntries) {
+  const expectedArchive = entry.state;
+  const actualArchive = await client.readContract({ address, functionName: "get_archive", args: [BigInt(expectedArchive.id)] });
+  archives.push(actualArchive);
+  check(`archive ${expectedArchive.id} exists`, actualArchive.id === expectedArchive.id);
+  check(`archive ${expectedArchive.id} steward`, actualArchive.steward.toLowerCase() === expectedArchive.steward.toLowerCase());
+  check(`archive ${expectedArchive.id} cutoff`, actualArchive.cutoff_year === expectedArchive.cutoff_year);
+  check(`archive ${expectedArchive.id} charter binding`, actualArchive.charter_url === expectedArchive.charter_url && actualArchive.charter_digest === expectedArchive.charter_digest);
+}
 
 const records = [];
 for (const expected of manifest.records || []) {
@@ -82,6 +87,6 @@ const curator = manifest.curatorProof;
 const curatorState = await client.readContract({ address, functionName: "is_curator", args: [BigInt(curator.archiveId), curator.curator] });
 check("curator revoked", curatorState === curator.stateAfterRevoke);
 
-const output = { ok: failures.length === 0, address, sourceProof, stats, archive, records, candidates, resolutionStates, curatorState, verifiedTransactions, checks, failures, manifest: manifestPath };
+const output = { ok: failures.length === 0, address, sourceProof, stats, archives, records, candidates, resolutionStates, curatorState, verifiedTransactions, checks, failures, manifest: manifestPath };
 console.log(JSON.stringify(output, null, 2));
 if (failures.length) process.exit(1);

@@ -34,10 +34,10 @@ The canonical-label detach issue is fixed in `contracts/archivefuse.py` with `_r
 
 - `genvm-lint check contracts/archivefuse.py --json`: PASS; 26 methods (17 views, 9 writes), informational newer-runner notices only.
 - `npm ci --no-audit --no-fund`: PASS; 373 packages installed from the generated lockfile.
-- `npm run verify`: PASS; preflight 22/22, Direct Mode 51/51, typecheck, ESLint and Next production build.
-- `npm run test:source`: PASS; 33 tests.
+- `npm run verify`: PASS before this proof-only pass; preflight 22/22, Direct Mode 52/52, typecheck, ESLint and Next production build.
+- `npm run test:source`: PASS; 34 tests.
 - Direct Mode uses the pinned `genlayer-test==0.29.2` and SDK `v0.2.16`. A Windows fd-0 temp-file cleanup defect in that pinned harness required the scoped `tests/direct/conftest.py` compatibility shim; no contract behavior was bypassed.
-- ESLint reports one existing warning in `postcss.config.mjs` (`import/no-anonymous-default-export`), with zero errors.
+- ESLint passes with zero warnings and zero errors; the anonymous PostCSS export warning was fixed.
 - The Next build reports a non-blocking warning that a user-level `package-lock.json` outside this repository is ignored; the repository lockfile is present and `npm ci` passed.
 - GitHub Actions run `32766871934` exposed and reproduced a clean-run-only missing dependency: `google.protobuf` was not declared. `protobuf==7.35.1` is now explicit in `requirements-dev.txt`; hosted run `32767247446` is green with Direct Mode 51/51 and all frontend gates.
 
@@ -46,9 +46,10 @@ The deployment receipt finalized with `MAJORITY_AGREE` and leader GenVM `SUCCESS
 ## Verification truth
 What remains unproven:
 - The hosted frontend is live at https://archivefuse.vercel.app/. A hosted injected-wallet write was not exercised by this agent.
-- Two legitimate positive-proof attempts (Ada Lovelace/Charles Babbage and Lewis Carroll) both failed closed because StudioNet validators reported source integrity could not be independently established. No positive SAME_ENTITY consensus is claimed.
-- No live cluster append/merge or correction proposal/detach was possible without a live cluster; `DETACH_MEMBER` and canonical-label refresh remain proven in Direct Mode.
-- The archive creation hash and the two later Lewis Carroll registration hashes were not captured by the prior sessions and are explicitly null in the evidence manifest.
+- Archive 2 used a commit-pinned immutable charter and two independently fetched, digest-bound Gutenberg biographies. Both registrations finalized with GenVM SUCCESS. The proposal transaction `0xf4a59d2010936bbe225e68022e9821bfe4ce22d47b97859daf07fcc152559e48` ultimately finalized after appeal with GenVM ERROR (`invalid_contract absent_runner_comment`), so no positive SAME_ENTITY result is claimed.
+- After that proposal, StudioNet ordinary reads and VecDB reads repeatedly returned `invalid_contract absent_runner_comment`; no candidate payload, case state, cluster, append/merge, or correction proof is claimed from the impaired runtime.
+- Archive 1’s two earlier fail-closed cases remain valid historical evidence. `DETACH_MEMBER` and canonical-label refresh remain proven in Direct Mode only.
+- The evidence manifest preserves all successful archive-2 hashes and the failed CLI/appeal attempts without treating them as successful proof.
 
 ## Release handoff
 The source fix, runtime verification, CI confirmation, StudioNet deployment, schema verification, live fail-closed lifecycle proof and Vercel frontend deployment are complete on the deployed source commit above. A hosted injected-wallet write remains unexercised by this agent.

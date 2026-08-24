@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def read(p): return (ROOT/p).read_text(encoding='utf-8')
@@ -29,7 +30,14 @@ def test_correction_uses_full_live_history_and_stale_closure():
     assert 'invalidate_stale_correction' in t and 'proposal-time peer' in t.lower()
 def test_hardened_schema_is_required_by_frontend():
     t=read('lib/genlayer/config.ts')
-    assert 'invalidate_stale_resolution' in t and 'invalidate_stale_correction' in t
+    required=json.loads(read('lib/genlayer/required-methods.json'))
+    assert 'required-methods.json' in t
+    assert {'invalidate_stale_resolution','invalidate_stale_correction','is_curator','get_record_cluster','preview_correction_context','propose_correction','adjudicate_correction'} <= set(required)
+
+def test_registrar_warns_about_immutable_charter():
+    t=read('app/register/page.tsx').lower()
+    assert 'version-pinned or otherwise immutable charter url' in t
+    assert 'sha-256 integrity check' in t
 def test_home_displays_active_not_historical_cluster_count():
     t=read('app/page.tsx')
     assert 'active_cluster_count' in t and '>active entities<' in t

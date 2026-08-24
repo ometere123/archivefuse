@@ -11,4 +11,3 @@ export const explorerTxUrl = (hash: string) => `${EXPLORER_BASE}/tx/${hash}`;
 export const explorerAddressUrl = (address: string) => `${EXPLORER_BASE}/address/${address}`;
 
 export const REQUIRED_METHODS = requiredMethods as readonly string[];
-// The shared list explicitly includes invalidate_stale_resolution and invalidate_stale_correction.
