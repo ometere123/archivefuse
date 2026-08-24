@@ -98,7 +98,7 @@ npm run build
 
 The Direct Mode suite contains adversarial lifecycle coverage for authorization, semantic-retrieval boundaries, digest failure, duplicate/stale cases, cluster merges and versioned corrections. It must actually run under `genlayer-test` before release; source presence alone is not a pass.
 
-Before release, keep `package-lock.json` committed and use `npm ci` in CI. The current candidate has proven a clean `npm ci`, Direct Mode 51/51, `genvm-lint`, typecheck, ESLint and production build locally; StudioNet/Vercel proof remains deployment-dependent.
+Before release, keep `package-lock.json` committed and use `npm ci` in CI. The current candidate has proven a clean `npm ci`, Direct Mode 51/51, `genvm-lint`, typecheck, ESLint, production build and green GitHub Actions run `32767247446`. The verified StudioNet contract is `0x35070251e889dC4d688Fd52313cd420b25cD4e2a`.
 
 ## StudioNet deployment
 
@@ -120,9 +120,9 @@ Then set these public values on Vercel:
 A deployment transaction being submitted or even `FINALIZED` is not enough: inspect the actual GenVM execution result and re-read the deployed contract/schema/state.
 
 ## Deployment status
-See [`DEPLOYMENT.json`](./DEPLOYMENT.json) and [`handoff.md`](./handoff.md). They intentionally contain no fabricated address or transaction proof.
+See [`DEPLOYMENT.json`](./DEPLOYMENT.json) and [`handoff.md`](./handoff.md) for the real contract address, source commit and deployment transaction.
 
-At the current checkpoint, runtime Direct Mode/genvm-lint/npm production-build proof and StudioNet/Vercel deployment remain to be completed in an environment with the required toolchain/network access.
+The verified StudioNet deployment uses source commit `61f98e50c4f4cc8aa952c26fc3182226f4933762` and deployment transaction `0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359`. Live lifecycle proof recorded archive 1, two digest-bound public records, a VecDB candidate preview, a fail-closed `INSUFFICIENT_EVIDENCE` resolution, and curator grant/revoke. Vercel deployment remains external because the available CLI could not create its user config in this environment.
 
 ## Security / privacy boundary
 ArchiveFuse is for public historical material. Contract state and vectors are public. Embeddings are not encryption. The MVP rejects PERSON records later than the archive's configured historical cutoff. Registered browser source previews are sandboxed as untrusted content; consensus independently fetches and verifies source bytes.
