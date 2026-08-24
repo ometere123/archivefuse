@@ -1,6 +1,6 @@
 export type EntityType = "PERSON" | "PLACE" | "ORGANIZATION";
-export type Relation = "SAME_ENTITY" | "RELATED_ENTITY" | "DISTINCT_ENTITY" | "INSUFFICIENT_EVIDENCE" | "";
-export type CorrectionDecision = "KEEP_MEMBER" | "DETACH_MEMBER" | "INSUFFICIENT_EVIDENCE" | "";
+export type Relation = "SAME_ENTITY" | "RELATED_ENTITY" | "DISTINCT_ENTITY" | "INSUFFICIENT_EVIDENCE" | "STALE" | "";
+export type CorrectionDecision = "KEEP_MEMBER" | "DETACH_MEMBER" | "INSUFFICIENT_EVIDENCE" | "STALE" | "";
 
 export type Archive = {
   id: number; steward: string; name: string; charter_url: string; charter_digest: string;
@@ -40,7 +40,8 @@ export type Candidate = {
 };
 
 export type ContractStats = {
-  archive_count: number; record_count: number; case_count: number; correction_count: number; cluster_count: number;
+  archive_count: number; record_count: number; case_count: number; correction_count: number;
+  cluster_count: number; active_cluster_count: number;
   max_candidates: number; max_cluster_members: number; embedding_model: string; vector_dimensions: number;
 };
 
@@ -53,9 +54,9 @@ export function parseNumberList(raw: string): number[] {
 }
 
 export function caseStatus(status: number) {
-  return ({1:"PENDING",2:"SAME ENTITY",3:"RELATED",4:"DISTINCT",5:"INSUFFICIENT"} as Record<number,string>)[status] ?? `STATUS ${status}`;
+  return ({1:"PENDING",2:"SAME ENTITY",3:"RELATED",4:"DISTINCT",5:"INSUFFICIENT",6:"STALE"} as Record<number,string>)[status] ?? `STATUS ${status}`;
 }
 
 export function correctionStatus(status: number) {
-  return ({1:"PENDING",2:"KEPT",3:"DETACHED",4:"INSUFFICIENT"} as Record<number,string>)[status] ?? `STATUS ${status}`;
+  return ({1:"PENDING",2:"KEPT",3:"DETACHED",4:"INSUFFICIENT",5:"STALE"} as Record<number,string>)[status] ?? `STATUS ${status}`;
 }
