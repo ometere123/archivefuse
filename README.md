@@ -124,6 +124,12 @@ See [`DEPLOYMENT.json`](./DEPLOYMENT.json) and [`handoff.md`](./handoff.md) for 
 
 The verified StudioNet deployment uses source commit `61f98e50c4f4cc8aa952c26fc3182226f4933762` and deployment transaction `0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359`. Live lifecycle proof recorded archive 1, two digest-bound public records, a VecDB candidate preview, a fail-closed `INSUFFICIENT_EVIDENCE` resolution, and curator grant/revoke. The hosted frontend is live at https://archivefuse.vercel.app/.
 
+## Evidence and live proof
+
+The machine-readable evidence package is [`evidence/studionet.json`](./evidence/studionet.json). The deployed contract source was retrieved with the GenLayer toolchain and compared byte-for-byte with `contracts/archivefuse.py`: both are 53,004 bytes with SHA-256 `f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3`.
+
+The complete schema verifier reports 26 actual and 26 expected methods, with no missing or unexpected methods. The live proof verifier confirms archive state, four immutable records, digest bindings, VecDB retrieval without membership mutation, two terminal fail-closed resolution cases, and curator grant/revoke state. No positive `SAME_ENTITY` cluster was claimed: StudioNet validators independently reported that the bound public sources could not be established. No live correction, cluster append/merge, or hosted injected-wallet write was claimed. The existing Direct Mode suite remains the proof for `DETACH_MEMBER` and canonical-label refresh.
+
 ## Security / privacy boundary
 ArchiveFuse is for public historical material. Contract state and vectors are public. Embeddings are not encryption. The MVP rejects PERSON records later than the archive's configured historical cutoff. Registered browser source previews are sandboxed as untrusted content; consensus independently fetches and verifies source bytes.
 

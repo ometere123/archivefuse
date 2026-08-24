@@ -41,12 +41,14 @@ The canonical-label detach issue is fixed in `contracts/archivefuse.py` with `_r
 - The Next build reports a non-blocking warning that a user-level `package-lock.json` outside this repository is ignored; the repository lockfile is present and `npm ci` passed.
 - GitHub Actions run `32766871934` exposed and reproduced a clean-run-only missing dependency: `google.protobuf` was not declared. `protobuf==7.35.1` is now explicit in `requirements-dev.txt`; hosted run `32767247446` is green with Direct Mode 51/51 and all frontend gates.
 
-The deployment receipt finalized with `MAJORITY_AGREE` and leader GenVM `SUCCESS`. Live archive 1 has two digest-bound public records. `preview_candidates(1, 8)` surfaced record 2 at distance `0.5040914` while cluster membership remained unchanged. Resolution case 1 finalized fail-closed as `INSUFFICIENT_EVIDENCE` (no cluster mutation). Curator grant transaction `0x87c40853e5be57324103af090661abcbb2a0945c8be2a0f7a5e1dcbe564a2947` returned true through the live genlayer-js read; revoke transaction `0xdd2002d3d77c1aa7dfdd6e71c2376a0e3cf38f0f6825a5470014d3ab8a5f1fe4` returned false.
+The deployment receipt finalized with `MAJORITY_AGREE` and leader GenVM `SUCCESS`. Deployed source equality is proven at 53,004 bytes with SHA-256 `f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3`. Live archive 1 now has four digest-bound public records. `preview_candidates(3, 8)` surfaced record 4 at distance `0.03472933` while cluster membership remained unchanged. Resolution cases 1 and 2 finalized fail-closed as `INSUFFICIENT_EVIDENCE` (no cluster mutation). Curator grant transaction `0x87c40853e5be57324103af090661abcbb2a0945c8be2a0f7a5e1dcbe564a2947` returned true through the live genlayer-js read; revoke transaction `0xdd2002d3d77c1aa7dfdd6e71c2376a0e3cf38f0f6825a5470014d3ab8a5f1fe4` returned false. Full machine-readable proof is in `evidence/studionet.json` and `npm run verify:studionet`.
 
 ## Verification truth
 What remains unproven:
 - The hosted frontend is live at https://archivefuse.vercel.app/. A hosted injected-wallet write was not exercised by this agent.
-- The live resolution was intentionally fail-closed; no positive SAME_ENTITY consensus or live correction detach was claimed.
+- Two legitimate positive-proof attempts (Ada Lovelace/Charles Babbage and Lewis Carroll) both failed closed because StudioNet validators reported source integrity could not be independently established. No positive SAME_ENTITY consensus is claimed.
+- No live cluster append/merge or correction proposal/detach was possible without a live cluster; `DETACH_MEMBER` and canonical-label refresh remain proven in Direct Mode.
+- The archive creation hash and the two later Lewis Carroll registration hashes were not captured by the prior sessions and are explicitly null in the evidence manifest.
 
 ## Release handoff
 The source fix, runtime verification, CI confirmation, StudioNet deployment, schema verification, live fail-closed lifecycle proof and Vercel frontend deployment are complete on the deployed source commit above. A hosted injected-wallet write remains unexercised by this agent.

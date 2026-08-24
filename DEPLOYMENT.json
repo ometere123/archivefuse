@@ -5,5 +5,5 @@
   "deploymentTransaction": "0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359",
   "sourceCommit": "61f98e50c4f4cc8aa952c26fc3182226f4933762",
   "frontendUrl": "https://archivefuse.vercel.app/",
-  "status": "CONTRACT_DEPLOYED"
+  "status": "LIVE"
 }

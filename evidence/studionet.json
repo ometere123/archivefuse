@@ -1,0 +1,82 @@
+{
+  "network": "StudioNet",
+  "chainId": 61999,
+  "contractAddress": "0x35070251e889dC4d688Fd52313cd420b25cD4e2a",
+  "deployedSourceCommit": "61f98e50c4f4cc8aa952c26fc3182226f4933762",
+  "deploymentTransaction": "0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359",
+  "deploymentExecution": {
+    "status": "FINALIZED",
+    "genvm": "SUCCESS",
+    "consensus": "MAJORITY_AGREE"
+  },
+  "frontendUrl": "https://archivefuse.vercel.app/",
+  "sourceEquality": {
+    "repositoryPath": "contracts/archivefuse.py",
+    "deployedBytes": 53004,
+    "repositoryBytes": 53004,
+    "deployedSha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
+    "repositorySha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
+    "equal": true
+  },
+  "transactions": [
+    { "kind": "deployment", "hash": "0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359" },
+    { "kind": "record_registration", "recordId": 1, "hash": "0x233652efb1abfc70d894b20022dd98ed5e11058adb30eb6c804da5356a5fd0de" },
+    { "kind": "record_registration", "recordId": 2, "hash": "0x66ab8e8dbd4d6f4de8de290c9d99a3d9058aeb513d58a9f3c7f75bd3dc6c87d8" },
+    { "kind": "resolution_adjudication", "caseId": 1, "hash": "0xf3681442d962b20cf9dc3aca7f93642f28824212c2ebc3b1c7f6abb90078f5a2" },
+    { "kind": "curator_grant", "hash": "0x87c40853e5be57324103af090661abcbb2a0945c8be2a0f7a5e1dcbe564a2947" },
+    { "kind": "curator_revoke", "hash": "0xdd2002d3d77c1aa7dfdd6e71c2376a0e3cf38f0f6825a5470014d3ab8a5f1fe4" },
+    { "kind": "resolution_proposal", "caseId": 2, "hash": "0x2ac0060a41ace31e72de2c1e8e081da2d2237adcfa31a563e26bb634f5a1a387" },
+    { "kind": "resolution_adjudication", "caseId": 2, "hash": "0xe5aaf296be7ae6ff66f7f35956caeca3508111348f7d8d6390256e7006d2424d" }
+  ],
+  "knownNonSuccessTransactions": [
+    { "kind": "resolution_proposal", "caseId": 1, "hash": "0x91403288bf6a92684dbc4c91600be5b80a7ecfa357767dc3d9a781f40439cb4e", "status": "FINALIZED", "genvm": "ERROR", "consensus": "MAJORITY_AGREE", "note": "The case state is readable and was adjudicated, but the captured proposal receipt has leader execution_result ERROR; it is not claimed as a successful transaction proof." }
+  ],
+  "archive": {
+    "transactionHash": null,
+    "transactionHashNote": "Archive creation hash was not captured by the original completed session; canonical archive state is independently verified below.",
+    "state": {
+      "id": 1,
+      "name": "ArchiveFuse Public Historical Proof",
+      "steward": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2",
+      "charter_url": "https://raw.githubusercontent.com/ometere123/archivefuse/main/README.md",
+      "charter_digest": "sha256:f99044409b7cfaad29b1491969ee1dcf293985dc85b121031d78d3c977fd3222",
+      "cutoff_year": 1950,
+      "record_count": 4,
+      "case_count": 2,
+      "cluster_count": 0,
+      "created_at": "2026-08-24T19:31:05.672088Z"
+    }
+  },
+  "records": [
+    { "id": 1, "transactionHash": "0x233652efb1abfc70d894b20022dd98ed5e11058adb30eb6c804da5356a5fd0de", "state": { "archive_id": 1, "cluster_id": 0, "entity_type": "PERSON", "entity_type_code": 1, "title": "Ada Lovelace", "summary": "Augusta Ada King, Countess of Lovelace, mathematician and computing pioneer.", "source_url": "https://en.wikipedia.org/wiki/Ada_Lovelace", "source_digest": "sha256:a60ffe01375612289cc4f9641bc6a0f8a4d3da07c5135efebc55a25b6e213fb8", "names_json": "[\"Ada Lovelace\",\"Augusta Ada King\"]", "dates_json": "[\"1815\",\"1852\"]", "places_json": "[\"London\",\"England\"]", "roles_json": "[\"mathematician\",\"writer\"]", "latest_year": 1852 } },
+    { "id": 2, "transactionHash": "0x66ab8e8dbd4d6f4de8de290c9d99a3d9058aeb513d58a9f3c7f75bd3dc6c87d8", "state": { "archive_id": 1, "cluster_id": 0, "entity_type": "PERSON", "entity_type_code": 1, "title": "Charles Babbage", "summary": "Charles Babbage, mathematician and inventor associated with the Analytical Engine.", "source_url": "https://en.wikipedia.org/wiki/Charles_Babbage", "source_digest": "sha256:f3b12456b84058e84fac857b338e11c04478ede4e176ef49929c0d787eda0930", "names_json": "[\"Charles Babbage\"]", "dates_json": "[\"1791\",\"1871\"]", "places_json": "[\"London\",\"England\"]", "roles_json": "[\"mathematician\",\"inventor\"]", "latest_year": 1871 } },
+    { "id": 3, "transactionHash": null, "transactionHashNote": "Record committed, but its original transaction hash was not captured by the prior session.", "state": { "archive_id": 1, "cluster_id": 0, "entity_type": "PERSON", "entity_type_code": 1, "title": "Lewis Carroll", "summary": "Lewis Carroll, the pen name of Charles Lutwidge Dodgson, author and mathematician.", "source_url": "https://www.gutenberg.org/cache/epub/11/pg11.txt", "source_digest": "sha256:01b38ea4c710a84bc18d0bd41271a5a1a92b94e97b2812f4dece97d4a694725e", "names_json": "[\"Lewis Carroll\",\"Charles Lutwidge Dodgson\"]", "dates_json": "[\"1832\",\"1898\"]", "places_json": "[\"Daresbury\",\"Oxford\"]", "roles_json": "[\"author\",\"mathematician\"]", "latest_year": 1898 } },
+    { "id": 4, "transactionHash": null, "transactionHashNote": "Record committed, but its original transaction hash was not captured by the prior session.", "state": { "archive_id": 1, "cluster_id": 0, "entity_type": "PERSON", "entity_type_code": 1, "title": "Lewis Carroll", "summary": "Lewis Carroll, the pen name of Charles Lutwidge Dodgson, author of Through the Looking-Glass.", "source_url": "https://www.gutenberg.org/cache/epub/12/pg12.txt", "source_digest": "sha256:e40a38f5da841f9fb6acc557355c447b7c2ccb56a208caf5fcf2b05081f14d42", "names_json": "[\"Lewis Carroll\",\"Charles Lutwidge Dodgson\"]", "dates_json": "[\"1832\",\"1898\"]", "places_json": "[\"Daresbury\",\"Oxford\"]", "roles_json": "[\"author\",\"mathematician\"]", "latest_year": 1898 } }
+  ],
+  "vecdbProof": {
+    "recordId": 3,
+    "requestedK": 8,
+    "candidate": { "record_id": 4, "title": "Lewis Carroll", "distance": "0.03472933", "cluster_id": 0, "latest_year": 1898, "year_gap": 0 },
+    "membershipBefore": { "record3": 0, "record4": 0 },
+    "membershipAfter": { "record3": 0, "record4": 0 },
+    "retrievalMutatedMembership": false
+  },
+  "resolutions": [
+    { "caseId": 1, "proposalTransaction": "0x91403288bf6a92684dbc4c91600be5b80a7ecfa357767dc3d9a781f40439cb4e", "adjudicationTransaction": "0xf3681442d962b20cf9dc3aca7f93642f28824212c2ebc3b1c7f6abb90078f5a2", "state": { "record_a": 1, "record_b": 2, "relation": "INSUFFICIENT_EVIDENCE", "status": 5, "resulting_cluster": 0, "anchor_codes_json": "[]" } },
+    { "caseId": 2, "proposalTransaction": "0x2ac0060a41ace31e72de2c1e8e081da2d2237adcfa31a563e26bb634f5a1a387", "adjudicationTransaction": "0xe5aaf296be7ae6ff66f7f35956caeca3508111348f7d8d6390256e7006d2424d", "state": { "record_a": 3, "record_b": 4, "relation": "INSUFFICIENT_EVIDENCE", "status": 5, "resulting_cluster": 0, "anchor_codes_json": "[]" } }
+  ],
+  "curatorProof": {
+    "archiveId": 1,
+    "curator": "0xac3ac69dc0bde389256dd6748c75817ead9286d9",
+    "grantTransaction": "0x87c40853e5be57324103af090661abcbb2a0945c8be2a0f7a5e1dcbe564a2947",
+    "revokeTransaction": "0xdd2002d3d77c1aa7dfdd6e71c2376a0e3cf38f0f6825a5470014d3ab8a5f1fe4",
+    "stateAfterRevoke": false
+  },
+  "corrections": [],
+  "unproven": [
+    "No legitimate live SAME_ENTITY result was obtained: both strong public-source attempts fail closed as INSUFFICIENT_EVIDENCE because StudioNet validators report source integrity could not be independently established.",
+    "No live cluster append/merge or correction proposal was possible without a live cluster; DETACH_MEMBER is proven in Direct Mode only.",
+    "Hosted Vercel injected-wallet write was not exercised by this agent.",
+    "Archive creation and Lewis Carroll record-registration transaction hashes were not captured by the prior sessions, so they are explicitly null rather than fabricated."
+  ]
+}
