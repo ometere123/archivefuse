@@ -11,12 +11,12 @@ type Client = GenLayerClient<typeof import("./config").chain>;
 const isNumber = (v: unknown): v is number => typeof v === "number" && Number.isFinite(v);
 const isString = (v: unknown): v is string => typeof v === "string";
 
-function isArchive(v: unknown): v is Archive { return isRecord(v) && isNumber(v.id) && isString(v.name) && isString(v.steward) && isNumber(v.record_count); }
+function isArchive(v: unknown): v is Archive { return isRecord(v) && isNumber(v.id) && isString(v.name) && isString(v.steward) && isNumber(v.record_count) && isNumber(v.cluster_count); }
 function isArchiveRecord(v: unknown): v is ArchiveRecord { return isRecord(v) && isNumber(v.id) && isNumber(v.archive_id) && isString(v.title) && isString(v.entity_type) && isString(v.source_url); }
 function isCase(v: unknown): v is ResolutionCase { return isRecord(v) && isNumber(v.id) && isNumber(v.record_a) && isNumber(v.record_b) && isString(v.relation); }
 function isCorrection(v: unknown): v is CorrectionCase { return isRecord(v) && isNumber(v.id) && isNumber(v.cluster_id) && isNumber(v.record_id) && isString(v.decision); }
-function isCluster(v: unknown): v is EntityCluster { return isRecord(v) && isNumber(v.id) && isNumber(v.version) && isString(v.canonical_label); }
-function isStats(v: unknown): v is ContractStats { return isRecord(v) && isNumber(v.archive_count) && isNumber(v.record_count) && isString(v.embedding_model); }
+function isCluster(v: unknown): v is EntityCluster { return isRecord(v) && isNumber(v.id) && isNumber(v.version) && isNumber(v.member_count) && isString(v.canonical_label); }
+function isStats(v: unknown): v is ContractStats { return isRecord(v) && isNumber(v.archive_count) && isNumber(v.record_count) && isNumber(v.cluster_count) && isNumber(v.active_cluster_count) && isString(v.embedding_model); }
 function isNumberArray(v: unknown): v is number[] { return Array.isArray(v) && v.every(isNumber); }
 function isCandidates(v: unknown): v is Candidate[] { return Array.isArray(v) && v.every((x) => isRecord(x) && isNumber(x.record_id) && isString(x.distance) && isString(x.title)); }
 
