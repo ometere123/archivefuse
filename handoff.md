@@ -27,6 +27,9 @@ The post-build audit found and fixed product/runtime integrity issues rather tha
 14. Direct Mode coverage was expanded from 4 tests to 18 adversarial lifecycle tests.
 15. Source/preflight regressions now assert the hardened invariants.
 
+## One known source fix still required before runtime sign-off
+If a correction detaches the record whose title currently supplies `EntityCluster.canonical_label`, the cluster can retain a label derived from a record that is no longer an active member. Before deployment, add a deterministic helper that refreshes `canonical_label` from the first remaining active member whenever a detach succeeds. Add a Direct Mode regression that detaches the original label record and proves the cluster label changes to an active remaining record. Do not solve this with frontend-only presentation logic; canonical label is contract state.
+
 ## Verification truth
 What is proven in this environment:
 - Source was reviewed against the full repository and GenLayer reference patterns.
@@ -44,15 +47,16 @@ What is **not** proven here:
 Reason: this sandbox does not have `genlayer`, `genvm-lint` or `genlayer-test`, and cannot install the required external toolchains/dependencies from the network. Do not convert those environmental limits into claimed passes.
 
 ## Next exact action
-A local coding agent with network/toolchain access should take the final `main` SHA and perform **runtime proof/deployment only**, not redesign the project:
+A local coding agent with network/toolchain access should take the final `main` SHA and perform **the remaining source fix + runtime proof/deployment**, not redesign the project:
 
 1. Pull the exact final audited `main` SHA and read `AGENTS.md`, this file, `architecture.md`, `trd.md`, `prd.md` and `DEPLOYMENT.json`.
-2. Install Node/Python dependencies. Generate and commit `package-lock.json`, then change CI to `npm ci` if clean install succeeds.
-3. Run preflight/source tests, the full 18-test GenLayer Direct Mode suite, `genvm-lint`, TypeScript, ESLint and Next production build. Fix only demonstrated runtime/build defects; add regression coverage.
-4. Push fixes to `main`, rerun all verification, and record exact counts.
-5. Inspect the installed GenLayer CLI/account workflow. Use a safe development account, never expose secrets.
-6. Deploy the frozen verified source to StudioNet and verify FINALIZED + actual GenVM execution success.
-7. Verify deployed schema and exercise real archive → records → candidate retrieval → resolution lifecycle, plus a fail-closed outcome and correction path where feasible.
-8. Update `DEPLOYMENT.json`, README and this handoff with only real public address/transaction/source-commit evidence.
-9. Configure the live contract address on Vercel, deploy the frontend, and exercise one hosted injected-wallet write.
-10. Push final deployment evidence/configuration and report final remote SHA.
+2. Fix the canonical-label-on-detach edge case described above and add its Direct Mode regression.
+3. Install Node/Python dependencies. Generate and commit `package-lock.json`, then change CI to `npm ci` if clean install succeeds.
+4. Run preflight/source tests, the full GenLayer Direct Mode suite, `genvm-lint`, TypeScript, ESLint and Next production build. Fix only demonstrated runtime/build defects; add regression coverage.
+5. Push fixes to `main`, rerun all verification, and record exact counts.
+6. Inspect the installed GenLayer CLI/account workflow. Use a safe development account, never expose secrets.
+7. Deploy the frozen verified source to StudioNet and verify FINALIZED + actual GenVM execution success.
+8. Verify deployed schema and exercise real archive → records → candidate retrieval → resolution lifecycle, plus a fail-closed outcome and correction path where feasible.
+9. Update `DEPLOYMENT.json`, README and this handoff with only real public address/transaction/source-commit evidence.
+10. Configure the live contract address on Vercel, deploy the frontend, and exercise one hosted injected-wallet write.
+11. Push final deployment evidence/configuration and report final remote SHA.
