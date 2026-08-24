@@ -122,7 +122,7 @@ A deployment transaction being submitted or even `FINALIZED` is not enough: insp
 ## Deployment status
 See [`DEPLOYMENT.json`](./DEPLOYMENT.json) and [`handoff.md`](./handoff.md) for the real contract address, source commit and deployment transaction.
 
-The verified StudioNet deployment uses source commit `61f98e50c4f4cc8aa952c26fc3182226f4933762` and deployment transaction `0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359`. Live lifecycle proof recorded archive 1, two digest-bound public records, a VecDB candidate preview, a fail-closed `INSUFFICIENT_EVIDENCE` resolution, and curator grant/revoke. Vercel deployment remains external because the available CLI could not create its user config in this environment.
+The verified StudioNet deployment uses source commit `61f98e50c4f4cc8aa952c26fc3182226f4933762` and deployment transaction `0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359`. Live lifecycle proof recorded archive 1, two digest-bound public records, a VecDB candidate preview, a fail-closed `INSUFFICIENT_EVIDENCE` resolution, and curator grant/revoke. The hosted frontend is live at https://archivefuse.vercel.app/.
 
 ## Security / privacy boundary
 ArchiveFuse is for public historical material. Contract state and vectors are public. Embeddings are not encryption. The MVP rejects PERSON records later than the archive's configured historical cutoff. Registered browser source previews are sandboxed as untrusted content; consensus independently fetches and verifies source bytes.

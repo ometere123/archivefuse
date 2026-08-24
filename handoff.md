@@ -8,7 +8,7 @@
 - StudioNet address: `0x35070251e889dC4d688Fd52313cd420b25cD4e2a`.
 - Deployment transaction: `0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359`.
 - Deployed source commit: `61f98e50c4f4cc8aa952c26fc3182226f4933762`.
-- Vercel URL: **NOT DEPLOYED / NOT PROVEN**.
+- Vercel URL: https://archivefuse.vercel.app/ (HTTP 200 verified).
 
 ## Hardening completed on 2026-08-24
 The post-build audit found and fixed product/runtime integrity issues rather than only polishing UI:
@@ -45,8 +45,8 @@ The deployment receipt finalized with `MAJORITY_AGREE` and leader GenVM `SUCCESS
 
 ## Verification truth
 What remains unproven:
-- No Vercel deployment or hosted-wallet write exists; the Vercel CLI could not create its user config in this environment (`operation not permitted`).
+- The hosted frontend is live at https://archivefuse.vercel.app/. A hosted injected-wallet write was not exercised by this agent.
 - The live resolution was intentionally fail-closed; no positive SAME_ENTITY consensus or live correction detach was claimed.
 
 ## Release handoff
-The source fix, runtime verification, CI confirmation, StudioNet deployment, schema verification and live fail-closed lifecycle proof are complete on the deployed source commit above. The repository is Vercel-ready through `.env.example`; the only remaining external step is Vercel authorization/configuration, followed by a hosted injected-wallet write proof.
+The source fix, runtime verification, CI confirmation, StudioNet deployment, schema verification, live fail-closed lifecycle proof and Vercel frontend deployment are complete on the deployed source commit above. A hosted injected-wallet write remains unexercised by this agent.
