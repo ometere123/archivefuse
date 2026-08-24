@@ -1,0 +1,10 @@
+import { createAccount, createClient } from "genlayer-js";
+import { studionet } from "genlayer-js/chains";
+const address=process.env.NEXT_PUBLIC_ARCHIVEFUSE_CONTRACT;
+if(!address) throw new Error("NEXT_PUBLIC_ARCHIVEFUSE_CONTRACT is required");
+const endpoint=process.env.NEXT_PUBLIC_GENLAYER_ENDPOINT||"https://studio.genlayer.com/api";
+const required=["create_archive","set_curator","register_record","preview_candidates","propose_resolution","adjudicate_resolution","preview_correction_context","propose_correction","adjudicate_correction","get_archive","get_record","get_case","get_correction","get_cluster","list_archive_ids","list_record_ids","list_case_ids","list_correction_ids","list_cluster_members","list_cluster_case_ids","list_cluster_correction_ids","stats"];
+const client=createClient({chain:studionet,endpoint,account:createAccount()});
+const schema=await client.getContractSchema(address);const missing=required.filter(x=>!schema?.methods?.[x]);
+console.log(JSON.stringify({address,methodCount:Object.keys(schema?.methods||{}).length,missing},null,2));
+if(missing.length)process.exit(1);
