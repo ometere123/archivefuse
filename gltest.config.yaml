@@ -1,2 +1,7 @@
-contract: contracts/archivefuse.py
-mode: direct
+networks:
+  default: localnet
+  localnet: null
+paths:
+  contracts: contracts
+  artifacts: artifacts
+environment: .env

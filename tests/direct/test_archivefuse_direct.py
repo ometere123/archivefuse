@@ -119,10 +119,12 @@ def test_empty_collection_views_are_read_only_and_return_empty(direct_vm,direct_
 def test_correction_detach_preserves_record_and_versioned_receipt(direct_vm,direct_deploy):
     c=deploy(direct_deploy); aid,a,b=seed_two(c,direct_vm); case,_=pair(c,direct_vm,aid,a,b); cluster=c.get_case(case)['resulting_cluster']; original=c.get_record(a)
     url='https://archive.example/correction.txt'; body=b'Independent register proves the target was a different person at a different place and role.'; web(direct_vm,url,body)
-    correction=c.propose_correction(cluster,a,url,digest(body)); row=c.get_correction(correction); frozen=json.loads(row['context_record_ids_json']); assert b in frozen
+    correction=c.propose_correction(cluster,a,url,digest(body)); row=c.get_correction(correction); frozen=json.loads(row['context_record_ids_json']); assert b in frozen; assert c.get_cluster(cluster)['canonical_label']==original['title']
     mock_correction(direct_vm,'DETACH_MEMBER',['PLACE','ROLE_OCCUPATION']); assert c.adjudicate_correction(correction)=='DETACH_MEMBER'
     assert c.get_record(a)['cluster_id']==0 and c.get_record(a)['title']==original['title']; assert c.get_record(b)['cluster_id']==cluster
+    assert c.get_cluster(cluster)['canonical_label']==c.get_record(b)['title']
     receipt=c.get_correction(correction); assert receipt['status']==3 and receipt['decision']=='DETACH_MEMBER' and c.get_cluster(cluster)['member_count']==1
+    assert c.get_case(case)['relation']=='SAME_ENTITY' and c.get_case(case)['resulting_cluster']==cluster
 
 def test_duplicate_pending_correction_is_rejected(direct_vm,direct_deploy):
     c=deploy(direct_deploy); aid,a,b=seed_two(c,direct_vm); case,_=pair(c,direct_vm,aid,a,b); cluster=c.get_case(case)['resulting_cluster']; url='https://archive.example/correction.txt'; body=b'Correction evidence'; web(direct_vm,url,body)

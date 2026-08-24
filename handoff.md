@@ -27,24 +27,23 @@ The post-build audit found and fixed product/runtime integrity issues rather tha
 14. Direct Mode coverage was expanded from 4 tests to 18 adversarial lifecycle tests.
 15. Source/preflight regressions now assert the hardened invariants.
 
-## One known source fix still required before runtime sign-off
-If a correction detaches the record whose title currently supplies `EntityCluster.canonical_label`, the cluster can retain a label derived from a record that is no longer an active member. Before deployment, add a deterministic helper that refreshes `canonical_label` from the first remaining active member whenever a detach succeeds. Add a Direct Mode regression that detaches the original label record and proves the cluster label changes to an active remaining record. Do not solve this with frontend-only presentation logic; canonical label is contract state.
+## Runtime verification completed locally on 2026-08-24
+The canonical-label detach issue is fixed in `contracts/archivefuse.py` with `_refresh_canonical_label`, called after a successful `DETACH_MEMBER`. The Direct Mode correction regression proves the original resolution receipt, correction receipt, immutable detached record, surviving member, and active-member canonical label.
+
+- `genvm-lint check contracts/archivefuse.py --json`: PASS; 26 methods (17 views, 9 writes), informational newer-runner notices only.
+- `npm ci --no-audit --no-fund`: PASS; 373 packages installed from the generated lockfile.
+- `npm run verify`: PASS; preflight 22/22, Direct Mode 51/51, typecheck, ESLint and Next production build.
+- `npm run test:source`: PASS; 33 tests.
+- Direct Mode uses the pinned `genlayer-test==0.29.2` and SDK `v0.2.16`. A Windows fd-0 temp-file cleanup defect in that pinned harness required the scoped `tests/direct/conftest.py` compatibility shim; no contract behavior was bypassed.
+- ESLint reports one existing warning in `postcss.config.mjs` (`import/no-anonymous-default-export`), with zero errors.
+- The Next build reports a non-blocking warning that a user-level `package-lock.json` outside this repository is ignored; the repository lockfile is present and `npm ci` passed.
+
+StudioNet and Vercel remain unproven until external account/network authorization is available.
 
 ## Verification truth
-What is proven in this environment:
-- Source was reviewed against the full repository and GenLayer reference patterns.
-- The hardened contract was Python syntax/AST checked before replacement.
-- No production backend/mock-state path was found.
-
-What is **not** proven here:
-- The current hardened contract has not run under `genlayer-test` Direct Mode in this sandbox.
-- `genvm-lint` has not run here.
-- npm dependencies are not installed here, so current typecheck/ESLint/Next production build are not yet proven.
-- There is no `package-lock.json` yet, so frontend CI is not release-reproducible.
+What remains unproven:
 - No real StudioNet deployment/lifecycle transaction exists yet.
 - No Vercel deployment exists yet.
-
-Reason: this sandbox does not have `genlayer`, `genvm-lint` or `genlayer-test`, and cannot install the required external toolchains/dependencies from the network. Do not convert those environmental limits into claimed passes.
 
 ## Next exact action
 A local coding agent with network/toolchain access should take the final `main` SHA and perform **the remaining source fix + runtime proof/deployment**, not redesign the project:

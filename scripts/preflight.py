@@ -36,7 +36,7 @@ for p in ROOT.rglob('*'):
   if not p.is_file() or p.suffix not in {'.py','.ts','.tsx','.js','.mjs','.json','.yml','.yaml'} or '.github' in p.parts or p==pathlib.Path(__file__).resolve(): continue
   rel=p.relative_to(ROOT)
   if rel.parts and rel.parts[0] in ('tests','scripts'): continue
-  if '.pytest_cache' in p.parts or '__pycache__' in p.parts: continue
+  if '.pytest_cache' in p.parts or '__pycache__' in p.parts or 'node_modules' in p.parts: continue
   content=p.read_text(encoding='utf-8',errors='ignore').lower()
   for word in forbidden:
     if word in content: viol.append(f'{rel}:{word}')

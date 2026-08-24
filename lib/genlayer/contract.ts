@@ -4,7 +4,7 @@ import type { Archive, ArchiveRecord, Candidate, ContractStats, CorrectionCase, 
 import { CONTRACT_ADDRESS, REQUIRED_METHODS } from "./config";
 import { createReadClient } from "./read-client";
 import { inspectGenVMExecution } from "./execution";
-import { available, isRecord, notFound, performRead, unavailable, type ReadResult } from "./read-result";
+import { isRecord, notFound, performRead, unavailable, type ReadResult } from "./read-result";
 
 type Client = GenLayerClient<typeof import("./config").chain>;
 
@@ -31,8 +31,9 @@ export async function verifyContractSchema() {
 }
 
 async function one<T>(fn: string, args: CalldataEncodable[], guard: (v: unknown) => v is T): Promise<ReadResult<T>> {
-  if (!CONTRACT_ADDRESS) return unavailable("ArchiveFuse has not been configured with a deployed contract address.");
-  return performRead(() => createReadClient().readContract({ address: CONTRACT_ADDRESS, functionName: fn, args }), guard, `${fn} returned malformed live data.`);
+  const address = CONTRACT_ADDRESS;
+  if (!address) return unavailable("ArchiveFuse has not been configured with a deployed contract address.");
+  return performRead(() => createReadClient().readContract({ address, functionName: fn, args }), guard, `${fn} returned malformed live data.`);
 }
 
 export const getArchive = (id: number) => one("get_archive", [BigInt(id)], isArchive);
@@ -59,8 +60,9 @@ export async function getRecordMaybe(id: number): Promise<ReadResult<ArchiveReco
 }
 
 export async function writeContract(client: Client, functionName: string, args: CalldataEncodable[]) {
-  if (!CONTRACT_ADDRESS) throw new Error("No deployed ArchiveFuse contract address is configured.");
-  return await client.writeContract({ address: CONTRACT_ADDRESS, functionName, args, value: BigInt(0), consensusMaxRotations: 3 }) as TransactionHash;
+  const address = CONTRACT_ADDRESS;
+  if (!address) throw new Error("No deployed ArchiveFuse contract address is configured.");
+  return await client.writeContract({ address, functionName, args, value: BigInt(0), consensusMaxRotations: 3 }) as TransactionHash;
 }
 
 export type FinalizedExecution = { status: string; executionResult: "SUCCESS" | "ROLLBACK" | "ERROR" | "UNKNOWN"; executionError?: string };

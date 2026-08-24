@@ -98,7 +98,7 @@ npm run build
 
 The Direct Mode suite contains adversarial lifecycle coverage for authorization, semantic-retrieval boundaries, digest failure, duplicate/stale cases, cluster merges and versioned corrections. It must actually run under `genlayer-test` before release; source presence alone is not a pass.
 
-Before release, generate and commit `package-lock.json`, switch clean CI to `npm ci`, and prove a clean dependency install/build. The current repository intentionally does not claim that proof yet.
+Before release, keep `package-lock.json` committed and use `npm ci` in CI. The current candidate has proven a clean `npm ci`, Direct Mode 51/51, `genvm-lint`, typecheck, ESLint and production build locally; StudioNet/Vercel proof remains deployment-dependent.
 
 ## StudioNet deployment
 

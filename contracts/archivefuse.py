@@ -514,6 +514,14 @@ VECDB CANDIDATE CONTEXT (retrieval only): %s
         moved=int(source.member_count); target.member_count=u16(int(target.member_count)+moved); target.version=u32(int(target.version)+1); target.last_case_id=case_id; source.member_count=u16(0); source.superseded_by=target_id; source.version=u32(int(source.version)+1); source.last_case_id=case_id
         self.cluster_cases.get_or_insert_default(target_id).append(case_id); self.cluster_cases.get_or_insert_default(source_id).append(case_id); archive=self._archive(target.archive_id); archive.cluster_count-=ONE; self.active_cluster_count-=ONE; ClusterMerged(target_id,source_id,case_id=str(case_id),moved=str(moved)).emit(); return target_id
 
+    def _refresh_canonical_label(self, cluster_id: u256) -> None:
+        cluster=self._cluster(cluster_id); members=self.cluster_members.get(cluster_id)
+        if members is not None:
+            for record_id in members:
+                if self._current_cluster(record_id)==cluster_id:
+                    cluster.canonical_label=self._record(record_id).title; return
+        cluster.canonical_label=""
+
     def _settle_same_entity(self, case: ResolutionCase, left: Record, right: Record, case_id: u256) -> u256:
         if left.entity_type != right.entity_type: raise gl.vm.UserError("LLM_ERROR: SAME_ENTITY requires same entity type")
         cluster_a=self._current_cluster(case.record_a); cluster_b=self._current_cluster(case.record_b)
@@ -683,7 +691,7 @@ CORRECTION EVIDENCE: %s
         codes=[code for code in ANCHORS if code in [str(x) for x in raw_codes]]
         if decision==CORR_DETACH and len(codes)<2: raise gl.vm.UserError("LLM_ERROR: detach lacks independent contradiction anchors")
         if decision==CORR_DETACH:
-            self.record_cluster[correction.record_id]=u256(0); cluster.member_count=u16(int(cluster.member_count)-1); cluster.version=u32(int(cluster.version)+1); cluster.last_correction_id=correction_id; correction.status=u8(CORRECTION_DETACHED)
+            self.record_cluster[correction.record_id]=u256(0); cluster.member_count=u16(int(cluster.member_count)-1); cluster.version=u32(int(cluster.version)+1); cluster.last_correction_id=correction_id; self._refresh_canonical_label(correction.cluster_id); correction.status=u8(CORRECTION_DETACHED)
         elif decision==CORR_KEEP:
             cluster.version=u32(int(cluster.version)+1); cluster.last_correction_id=correction_id; correction.status=u8(CORRECTION_KEEP)
         else: correction.status=u8(CORRECTION_INSUFFICIENT)

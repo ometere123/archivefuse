@@ -9,7 +9,8 @@ export function useLive<T>(loader: () => Promise<T>, deps: DependencyList = []) 
     setLoading(true); setError(undefined);
     try { setData(await loader()); } catch (e) { setError(e instanceof Error ? e.message : String(e)); }
     finally { setLoading(false); }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // The public hook accepts a caller-owned dependency list for route/query changes.
+  // eslint-disable-next-line react-hooks/exhaustive-deps, react-hooks/use-memo
   }, deps);
   useEffect(() => { void reload(); }, [reload]);
   return { data, error, loading, reload };
