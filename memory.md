@@ -16,4 +16,4 @@ Frontend truth: all list loaders walk contract pagination; failed live reads nev
 UI identity: museum registrar's card catalogue / reading room with parchment, oxblood and teal.
 
 ## Status
-Source hardening plus the canonical-label detach fix are locally verified. The pinned `genlayer-test==0.29.2` Direct Mode suite passes 51/51, `genvm-lint` passes with informational newer-runner notices, and the generated lockfile clean-install/typecheck/lint/build gates pass. `DEPLOYMENT.json` remains `NOT_DEPLOYED` until a real StudioNet address and transaction are obtained. Never invent them.
+Source hardening plus the canonical-label detach fix are locally verified. The pinned `genlayer-test==0.29.2` Direct Mode suite passes 51/51, `genvm-lint` passes with informational newer-runner notices, and the generated lockfile clean-install/typecheck/lint/build gates pass. CI first exposed an undeclared `google.protobuf` dependency; `protobuf==7.35.1` is now explicit and CI is being rerun. `DEPLOYMENT.json` remains `NOT_DEPLOYED` until a real StudioNet address and transaction are obtained. Never invent them.

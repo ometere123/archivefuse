@@ -37,6 +37,7 @@ The canonical-label detach issue is fixed in `contracts/archivefuse.py` with `_r
 - Direct Mode uses the pinned `genlayer-test==0.29.2` and SDK `v0.2.16`. A Windows fd-0 temp-file cleanup defect in that pinned harness required the scoped `tests/direct/conftest.py` compatibility shim; no contract behavior was bypassed.
 - ESLint reports one existing warning in `postcss.config.mjs` (`import/no-anonymous-default-export`), with zero errors.
 - The Next build reports a non-blocking warning that a user-level `package-lock.json` outside this repository is ignored; the repository lockfile is present and `npm ci` passed.
+- GitHub Actions run `32766871934` exposed and reproduced a clean-run-only missing dependency: `google.protobuf` was not declared. `protobuf==7.35.1` is now explicit in `requirements-dev.txt`; local Direct Mode remains 51/51 after the dependency fix. The workflow must be rerun for hosted confirmation.
 
 StudioNet and Vercel remain unproven until external account/network authorization is available.
 
