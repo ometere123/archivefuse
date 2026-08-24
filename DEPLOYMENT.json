@@ -1,0 +1,9 @@
+{
+  "network": "StudioNet",
+  "chainId": 61999,
+  "contractAddress": null,
+  "deploymentTransaction": null,
+  "sourceCommit": null,
+  "frontendUrl": null,
+  "status": "NOT_DEPLOYED"
+}
