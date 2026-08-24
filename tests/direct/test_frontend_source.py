@@ -33,3 +33,9 @@ def test_hardened_schema_is_required_by_frontend():
 def test_home_displays_active_not_historical_cluster_count():
     t=read('app/page.tsx')
     assert 'active_cluster_count' in t and '>active entities<' in t
+def test_registrar_exposes_curator_grant_and_revoke():
+    t=read('app/register/page.tsx')
+    assert 'Curator access' in t and 'set_curator' in t and 'Grant curator access' in t and 'Revoke curator access' in t
+def test_source_lightbox_treats_registered_page_as_untrusted():
+    t=read('app/sources/[id]/page.tsx')
+    assert 'sandbox=""' in t and 'referrerPolicy="no-referrer"' in t and 'allow-scripts' not in t and 'noopener noreferrer' in t
