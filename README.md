@@ -10,11 +10,11 @@ Historical identity is messy: spelling varies, married names change, census year
 ArchiveFuse deliberately splits the problem:
 
 1. **VecDB recalls** semantically related records inside the same archive/entity type.
-2. **Validators judge** whether the public, SHA-256-bound source evidence supports `SAME_ENTITY`, `RELATED_ENTITY`, `DISTINCT_ENTITY` or `INSUFFICIENT_EVIDENCE`.
+2. **Validators judge** whether public, SHA-256-bound evidence supports `SAME_ENTITY`, `RELATED_ENTITY`, `DISTINCT_ENTITY` or `INSUFFICIENT_EVIDENCE`.
 3. **Deterministic code settles** cluster membership only after strict relation/anchor/version checks.
-4. **Corrections remain provenance**, so later evidence can detach a mistaken member without erasing the old resolution receipt.
+4. **Corrections remain provenance**, so later evidence can detach mistaken membership without erasing an earlier receipt.
 
-Vector distance is never presented as confidence and can never authorize a merge by itself.
+Vector distance is retrieval metadata, never identity confidence, and can never authorize a merge by itself.
 
 ## Architecture
 
@@ -28,8 +28,8 @@ GenLayer StudioNet · 61999
       ├─ immutable records
       ├─ VecDB / all-MiniLM-L6-v2
       ├─ source SHA-256 bindings
-      ├─ independent consensus
-      ├─ canonical entity clusters
+      ├─ independent validator consensus
+      ├─ canonical active entity clusters
       └─ versioned correction receipts
 ```
 
@@ -41,22 +41,26 @@ No Supabase. No Firebase. No SQL/Redis. No API server. No custom indexer. No moc
 - archive steward + curator authorization;
 - historical person cutoff policy;
 - bounded 384-dimensional contract-owned VecDB;
-- deterministic same-archive/same-type candidate filter;
-- source/evidence HTTPS + SHA-256 binding;
-- custom `run_nondet_unsafe` validator independently re-fetches/reasons;
+- same-archive/same-type candidate filtering;
+- source/evidence HTTPS + SHA-256 binding and source-size bounds;
+- optional resolution evidence requires URL + digest together;
+- custom `run_nondet_unsafe` validators independently re-fetch and re-reason;
 - `SAME_ENTITY` requires at least two shared identity-anchor categories;
-- stale resolution protection against cluster membership/version change;
-- deterministic cluster create/append/merge, max 64 members;
-- explicit correction path: `KEEP_MEMBER | DETACH_MEMBER | INSUFFICIENT_EVIDENCE`;
-- detach requires at least two shared contradiction-anchor categories;
-- append-only old receipts and active-member filtering;
+- duplicate pending pair/correction guards;
+- same-active-cluster challenges are forced into the correction flow;
+- deterministic `STALE` terminalization when canonical state changed after proposal;
+- deterministic cluster create/append/merge, max 64 active members;
+- active-cluster accounting separate from historical cluster objects;
+- correction proposals freeze proposal-time peer record IDs;
+- `DETACH_MEMBER` requires at least two shared contradiction-anchor categories;
+- original records and prior receipts remain addressable after correction;
 - no payment/token surface.
 
 ## Frontend
 The interface is a museum registrar's reading room rather than a generic AI dashboard:
 
 - `/` — collection shelves
-- `/register` — archive and accession registration
+- `/register` — archive creation, record accession and steward curator access
 - `/records/[id]` — accession card + semantic candidate recall
 - `/resolve/[a]/[b]` — two-card identity light table
 - `/cases/[id]` — immutable resolution receipt
@@ -64,10 +68,10 @@ The interface is a museum registrar's reading room rather than a generic AI dash
 - `/clusters/[id]/lineage` — resolution/correction provenance
 - `/corrections/new` — challenge current membership
 - `/corrections/[id]` — correction receipt
-- `/sources/[id]` — registered public source lightbox
+- `/sources/[id]` — script-disabled registered-source lightbox
 - `/timeline` — live archive chronology
 
-Reads do not require a wallet. Writes use an explicitly connected injected wallet, track account/chain/disconnect changes, require StudioNet, wait for `FINALIZED`, inspect GenVM execution, and re-read contract state before showing success.
+Reads do not require a wallet. Writes use an explicitly connected injected wallet, track account/chain/disconnect changes, require StudioNet, wait for `FINALIZED`, inspect actual GenVM execution, then re-read authoritative contract state before displaying success. Live list loaders walk contract pagination rather than silently truncating state at the first 50 items.
 
 ## Development
 
@@ -78,7 +82,7 @@ cp .env.example .env.local
 npm run dev
 ```
 
-Until a contract is deployed, leave `NEXT_PUBLIC_ARCHIVEFUSE_CONTRACT` unset: the UI will show an honest unavailable/empty configuration state, not fake archival records.
+Until a contract is deployed, leave `NEXT_PUBLIC_ARCHIVEFUSE_CONTRACT` unset: the UI shows an honest configuration/unavailable state, not fake archival records.
 
 ### Verify
 
@@ -92,21 +96,15 @@ npm run lint
 npm run build
 ```
 
-Direct Mode uses `genlayer-test==0.29.2` and the repository CI pins the GenVM universal SDK artifact to v0.2.16 with a SHA-256 check.
+The Direct Mode suite contains adversarial lifecycle coverage for authorization, semantic-retrieval boundaries, digest failure, duplicate/stale cases, cluster merges and versioned corrections. It must actually run under `genlayer-test` before release; source presence alone is not a pass.
+
+Before release, generate and commit `package-lock.json`, switch clean CI to `npm ci`, and prove a clean dependency install/build. The current repository intentionally does not claim that proof yet.
 
 ## StudioNet deployment
 
-The current GenLayer CLI supports StudioNet directly:
+A helper exists at `scripts/deploy-studionet.sh`, but the installed GenLayer CLI's current `--help` output is authoritative. Use a safe local **development** account and the officially supported account/unlock workflow in that environment. Never hard-code or commit a password, private key, mnemonic or keystore secret.
 
-```bash
-genlayer network studionet
-genlayer account show --rpc https://studio.genlayer.com/api
-genlayer deploy --contract contracts/archivefuse.py --rpc https://studio.genlayer.com/api
-```
-
-Prefer an existing unlocked **development** account. If a new account is needed, create it through the CLI's supported encrypted-keystore flow and unlock it through the supported OS-keychain command. Do not hard-code a password/private key into scripts or repository files.
-
-After deployment:
+After a real deployment, configure:
 
 ```bash
 export NEXT_PUBLIC_ARCHIVEFUSE_CONTRACT=0x...
@@ -114,16 +112,20 @@ npm run verify:schema
 npm run verify:studionet
 ```
 
-Then set the same public variables on Vercel:
+Then set these public values on Vercel:
 
 - `NEXT_PUBLIC_ARCHIVEFUSE_CONTRACT`
 - `NEXT_PUBLIC_GENLAYER_ENDPOINT=https://studio.genlayer.com/api`
 
+A deployment transaction being submitted or even `FINALIZED` is not enough: inspect the actual GenVM execution result and re-read the deployed contract/schema/state.
+
 ## Deployment status
 See [`DEPLOYMENT.json`](./DEPLOYMENT.json) and [`handoff.md`](./handoff.md). They intentionally contain no fabricated address or transaction proof.
 
+At the current checkpoint, runtime Direct Mode/genvm-lint/npm production-build proof and StudioNet/Vercel deployment remain to be completed in an environment with the required toolchain/network access.
+
 ## Security / privacy boundary
-ArchiveFuse is for public historical material. Contract state and vectors are public. Embeddings are not encryption. The MVP deliberately rejects PERSON records later than the archive's configured historical cutoff.
+ArchiveFuse is for public historical material. Contract state and vectors are public. Embeddings are not encryption. The MVP rejects PERSON records later than the archive's configured historical cutoff. Registered browser source previews are sandboxed as untrusted content; consensus independently fetches and verifies source bytes.
 
 ## License
 Apache-2.0
