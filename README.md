@@ -100,7 +100,7 @@ npm run build
 
 The Direct Mode suite contains adversarial lifecycle coverage for authorization, semantic-retrieval boundaries, digest failure, duplicate/stale cases, cluster merges, detach/reattach cycles and versioned corrections. It must actually run under `genlayer-test` before release; source presence alone is not a pass.
 
-Before release, keep `package-lock.json` committed and use `npm ci` in CI. The current release proves a clean `npm ci`, Direct Mode 55/55, `genvm-lint`, typecheck, ESLint, production build and green GitHub Actions run `32874852407` on final main commit `c1040a04d9c9a26320c2343bc4975aa5594aeca1`.
+Before release, keep `package-lock.json` committed and use `npm ci` in CI. The code-equivalent release was verified with a clean `npm ci`, Direct Mode 55/55, `genvm-lint`, typecheck, ESLint, production build and green GitHub Actions run `32874852407` on commit `c1040a04d9c9a26320c2343bc4975aa5594aeca1`; subsequent commits are documentation/evidence cleanup only.
 
 ## StudioNet deployment
 
