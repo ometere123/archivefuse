@@ -1,9 +1,9 @@
 {
   "network": "StudioNet",
   "chainId": 61999,
-  "contractAddress": "0xB676A1bF06811A093448F7ad39D8Fa65B075fC39",
-  "deployedSourceCommit": "61f98e50c4f4cc8aa952c26fc3182226f4933762",
-  "deploymentTransaction": "0xddd3e000ec610efbaa98f81ed74c2032162a68cb3ff88db919c94f880d605405",
+  "contractAddress": "0xBd71A829AbdECa647514752A86167c3BDFF1BAf1",
+  "deployedSourceCommit": "8fe09e0bc07967d4a3c46d1a7990fe7df9b73a25",
+  "deploymentTransaction": "0xf7bbf97dd2c056b485952ce1f211ab3e272832900617ef75170329743a2af55a",
   "deploymentExecution": {
     "status": "FINALIZED",
     "genvm": "SUCCESS",
@@ -12,10 +12,10 @@
   "frontendUrl": "https://archivefuse.vercel.app/",
   "sourceEquality": {
     "repositoryPath": "contracts/archivefuse.py",
-    "deployedBytes": 53004,
-    "repositoryBytes": 53004,
-    "deployedSha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
-    "repositorySha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
+    "deployedBytes": 53335,
+    "repositoryBytes": 53335,
+    "deployedSha256": "c2366984a5cb34578f4233b2e77876e623877bcdda5d0a215eff5f5fb884b589",
+    "repositorySha256": "c2366984a5cb34578f4233b2e77876e623877bcdda5d0a215eff5f5fb884b589",
     "equal": true
   },
   "hardeningSource": {
@@ -26,7 +26,10 @@
     "gitBlobBytes": 53335,
     "gitBlobSha256": "c2366984a5cb34578f4233b2e77876e623877bcdda5d0a215eff5f5fb884b589",
     "workingTreeEqualsGitBlob": true,
-    "deployedPayloadComparison": "not yet available: corrected source has not been deployed",
+    "deployedPayloadComparison": "corrected source deployed and compared byte-for-byte against the deployment payload",
+    "deployedPayloadBytes": 53335,
+    "deployedPayloadSha256": "c2366984a5cb34578f4233b2e77876e623877bcdda5d0a215eff5f5fb884b589",
+    "deployedPayloadEqualsRepository": true,
     "previousDeploymentPayloadBytes": 53004,
     "previousDeploymentPayloadSha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
     "previousGitBlobBytes": 52248,
@@ -50,16 +53,29 @@
     "genvm": "SUCCESS",
     "consensus": "MAJORITY_AGREE",
     "sourceCommit": "61f98e50c4f4cc8aa952c26fc3182226f4933762",
-    "sourceEquality": {
-      "deployedBytes": 53004,
-      "repositoryBytes": 53004,
-      "deployedSha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
-      "repositorySha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
-      "equal": true
-    },
+  "sourceEquality": {
+    "deployedBytes": 53335,
+    "repositoryBytes": 53335,
+    "deployedSha256": "c2366984a5cb34578f4233b2e77876e623877bcdda5d0a215eff5f5fb884b589",
+    "repositorySha256": "c2366984a5cb34578f4233b2e77876e623877bcdda5d0a215eff5f5fb884b589",
+    "equal": true,
+    "gitBlobBytes": 53335,
+    "gitBlobSha256": "c2366984a5cb34578f4233b2e77876e623877bcdda5d0a215eff5f5fb884b589",
+    "deployedEqualsGitBlob": true
+  },
+  "currentDeployment": {
+    "contractAddress": "0xBd71A829AbdECa647514752A86167c3BDFF1BAf1",
+    "transactionHash": "0xf7bbf97dd2c056b485952ce1f211ab3e272832900617ef75170329743a2af55a",
+    "status": "FINALIZED",
+    "genvm": "SUCCESS",
+    "consensus": "MAJORITY_AGREE",
+    "sourceCommit": "8fe09e0bc07967d4a3c46d1a7990fe7df9b73a25",
+    "schema": { "actualMethodCount": 26, "expectedMethodCount": 26, "missing": [], "unexpected": [] }
+  },
     "schema": { "actualMethodCount": 26, "expectedMethodCount": 26, "missing": [], "unexpected": [] }
   },
   "liveTransactions": [
+    { "kind": "corrected_deployment", "hash": "0xf7bbf97dd2c056b485952ce1f211ab3e272832900617ef75170329743a2af55a", "contractAddress": "0xBd71A829AbdECa647514752A86167c3BDFF1BAf1", "status": "FINALIZED", "genvm": "SUCCESS", "consensus": "MAJORITY_AGREE" },
     { "kind": "deployment", "hash": "0xddd3e000ec610efbaa98f81ed74c2032162a68cb3ff88db919c94f880d605405" },
     { "kind": "archive_creation", "archiveId": 2, "hash": "0xe1e79a58ff23d2a26935ab1527a3b45bfc1356bfd947d557b0005312f9dcf2f6", "note": "Fresh recovery archive; finalized SUCCESS." },
     { "kind": "record_registration", "archiveId": 2, "recordId": 1, "hash": "0x05b1160dadd585d8de4ec3c1e30626c9a2d77f7136f92d2ec664d2f17d51abc9", "note": "Finalized SUCCESS; later recovery submissions also produced records 2-4." },
@@ -86,6 +102,10 @@
     { "kind": "record_registration", "archiveId": 2, "recordId": 7, "hash": "0xd10db4134f98ab30acbc270271269005861530fefb19107b55bfb53a35cb1972" }
   ],
   "knownNonSuccessTransactions": [
+    { "kind": "archive_creation", "archiveId": 0, "hash": "0x5c687ac55b888edaec54cc373c24271a66510cb70ef68e517cf0b40d74b7c385", "status": "FINALIZED", "genvm": "ERROR", "note": "CLI typed-token syntax supplied too many positional arguments; no archive state was produced." },
+    { "kind": "record_registration", "archiveId": 1, "hash": "0x6d8e8189be66917b2a422ba524b375bf9117a9102837db85f7672e2d628535eb", "status": "FINALIZED", "genvm": "ERROR", "note": "CLI typed-token syntax supplied too many positional arguments; no record state was produced." },
+    { "kind": "record_registration", "archiveId": 1, "hash": "0x1d745ae16a7f714da4dd08fad1bffb2731e7186ffbadb8befcb8f1de2eab7f08", "status": "FINALIZED", "genvm": "ERROR", "note": "CLI auto-parsed JSON arrays where the contract requires JSON strings; no record state was produced." },
+    { "kind": "record_registration", "archiveId": 1, "hash": "0x77818c402508b9452a24c296171b2e5acc6e505d9639da8d87188764c8755400", "status": "FINALIZED", "genvm": "ERROR", "note": "CLI encoded array values instead of the contract's JSON strings; no record state was produced." },
     { "kind": "resolution_proposal", "caseId": 1, "hash": "0x91403288bf6a92684dbc4c91600be5b80a7ecfa357767dc3d9a781f40439cb4e", "status": "FINALIZED", "genvm": "ERROR", "consensus": "MAJORITY_AGREE", "note": "The case state is readable and was adjudicated, but the captured proposal receipt has leader execution_result ERROR; it is not claimed as a successful transaction proof." },
     { "kind": "archive_creation", "archiveId": 2, "hash": "0xfbbd2d4d7357714915ffbbfbe312259590648e1244161ff6f27141f576a2d10a", "status": "FINALIZED", "genvm": "ERROR", "note": "Initial CLI submission used the wrong typed-token syntax; no archive state was produced." },
     { "kind": "record_registration", "archiveId": 2, "hash": "0xdb728e61a47808757705910b2a14c5bff0c258c0fee72ae43785d901e70ebdf2", "status": "FINALIZED", "genvm": "ERROR", "note": "Initial CLI submission split JSON-array fields into positional arguments; no record state was produced." },
@@ -185,6 +205,29 @@
     "stateAfterRevoke": false
   },
   "corrections": [],
+  "currentTransactions": [
+    { "kind": "archive_creation", "archiveId": 1, "hash": "0x3601e7bba46942aae2c9632cda2ea154e6d3bb646d446153c026788e63c4e8e7" },
+    { "kind": "record_registration", "archiveId": 1, "recordId": 1, "hash": "0xb64b1d8f9c583e9441a290f520a43d985258aa566c9f9b1d7ad4ca4ae70d1a2b" },
+    { "kind": "record_registration", "archiveId": 1, "recordId": 2, "hash": "0x5f61c36a1363250b0fc94f265e713e5ebe379b469e11266b85a1a7aa12b31a63" },
+    { "kind": "resolution_proposal", "archiveId": 1, "caseId": 1, "hash": "0x55b839182d7be9bb73a3240513295565057a7ad21ca84abb67c815e01210bcfd" },
+    { "kind": "resolution_adjudication", "archiveId": 1, "caseId": 1, "hash": "0xce669822bbaea9f33358fc000412e584601284d1ecefcc869d657844ae92f54e" }
+  ],
+  "currentArchive": {
+    "purpose": "Fresh corrected-deployment proof using the immutable commit-pinned charter; earlier deployment and fail-closed histories remain preserved below.",
+    "transactionHash": "0x3601e7bba46942aae2c9632cda2ea154e6d3bb646d446153c026788e63c4e8e7",
+    "execution": { "status": "FINALIZED", "genvm": "SUCCESS", "consensus": "MAJORITY_AGREE" },
+    "charterCommit": "826708f3350c27ee3029c7bf5004a526cee638d6",
+    "charterUrl": "https://raw.githubusercontent.com/ometere123/archivefuse/826708f3350c27ee3029c7bf5004a526cee638d6/evidence/archive-charter.md",
+    "charterBytes": 438,
+    "charterDigest": "sha256:a814b97a9bfa5b1acb76d0e73a40c43b1b7b8b1c274b0bd72f6d0db6ae488d3f",
+    "state": { "id": 1, "name": "ArchiveFuse Corrected Hardening Proof", "steward": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2", "charter_url": "https://raw.githubusercontent.com/ometere123/archivefuse/826708f3350c27ee3029c7bf5004a526cee638d6/evidence/archive-charter.md", "charter_digest": "sha256:a814b97a9bfa5b1acb76d0e73a40c43b1b7b8b1c274b0bd72f6d0db6ae488d3f", "cutoff_year": 1950, "record_count": 2, "case_count": 1, "cluster_count": 1, "active_cluster_count": 1 }
+  },
+  "currentRecords": [
+    { "id": 1, "transactionHash": "0xb64b1d8f9c583e9441a290f520a43d985258aa566c9f9b1d7ad4ca4ae70d1a2b", "state": { "archive_id": 1, "cluster_id": 1, "entity_type": "PERSON", "entity_type_code": 1, "title": "Lewis Carroll (Charles Lutwidge Dodgson)", "summary": "Biographical record identifying Lewis Carroll as Charles Lutwidge Dodgson, English mathematician, logician and author.", "source_url": "https://www.gutenberg.org/files/33385/33385-8.txt", "source_digest": "sha256:20e308f88e199e0ee090bf1bb68d0f9cf959a249b5aa269396a05f1e8c740dae", "names_json": "[\"Lewis Carroll\",\"Charles Lutwidge Dodgson\"]", "dates_json": "[\"1832\",\"1898\"]", "places_json": "[\"Daresbury\",\"Oxford\",\"England\"]", "roles_json": "[\"mathematician\",\"logician\",\"author\"]", "latest_year": 1898 } },
+    { "id": 2, "transactionHash": "0x5f61c36a1363250b0fc94f265e713e5ebe379b469e11266b85a1a7aa12b31a63", "state": { "archive_id": 1, "cluster_id": 1, "entity_type": "PERSON", "entity_type_code": 1, "title": "Lewis Carroll in Wonderland and at Home", "summary": "Biographical record describing Charles Lutwidge Dodgson, known by the pen name Lewis Carroll, as an English author and mathematician born at Daresbury and associated with Oxford.", "source_url": "https://www.gutenberg.org/files/35418/35418-8.txt", "source_digest": "sha256:0a1c50383db4e01dbd8ee4c2d66647accb3a4313600894251053f6cd08c65503", "names_json": "[\"Lewis Carroll\",\"Charles Lutwidge Dodgson\"]", "dates_json": "[\"1832\",\"1898\"]", "places_json": "[\"Daresbury\",\"Oxford\",\"England\"]", "roles_json": "[\"author\",\"mathematician\"]", "latest_year": 1898 } }
+  ],
+  "currentVecdbProof": { "recordId": 1, "requestedK": 8, "mode": "proposal_frozen_context", "candidate": { "record_id": 2, "title": "Lewis Carroll in Wonderland and at Home", "distance": "0.07660948", "cluster_id": 0, "latest_year": 1898, "year_gap": 0 }, "membershipBefore": { "record1": 0, "record2": 0 }, "membershipAfter": { "record1": 1, "record2": 1 }, "retrievalMutatedMembership": false, "note": "The proposal's frozen candidate_context_json records record 2; direct preview_candidates was attempted on the corrected deployment but did not return a payload within the CLI read window." },
+  "currentResolutions": [ { "caseId": 1, "proposalTransaction": "0x55b839182d7be9bb73a3240513295565057a7ad21ca84abb67c815e01210bcfd", "adjudicationTransaction": "0xce669822bbaea9f33358fc000412e584601284d1ecefcc869d657844ae92f54e", "state": { "record_a": 1, "record_b": 2, "relation": "SAME_ENTITY", "status": 2, "resulting_cluster": 1, "anchor_codes_json": "[\"NAME_ALIAS\",\"DATE\",\"PLACE\",\"ROLE_OCCUPATION\"]" }, "cluster": { "id": 1, "canonical_label": "Lewis Carroll (Charles Lutwidge Dodgson)", "member_count": 2, "members": [1, 2], "version": 1, "superseded_by": 0, "active": true } } ],
   "unproven": [
     "Direct preview_candidates did not return a payload during the recovery session; the successful proposal's frozen candidate context independently records record 6 as the retrieved candidate.",
     "Live cluster append/merge was not exercised.",
