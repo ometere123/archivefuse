@@ -5,8 +5,9 @@
 - Architecture is fixed: contract + Vercel frontend only; no separately hosted backend/database/indexer/mock mode.
 - Contract owns immutable records, VecDB candidate recall, bounded consensus resolution, deterministic active-cluster settlement and versioned correction provenance.
 - Frontend includes collection shelves, registrar, curator access, record detail, candidate recall, comparison light table, case receipt, entity dossier, correction workflow/receipt, source viewer, lineage and timeline.
-- StudioNet address: `0x35070251e889dC4d688Fd52313cd420b25cD4e2a`.
-- Deployment transaction: `0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359`.
+- Original StudioNet address: `0x35070251e889dC4d688Fd52313cd420b25cD4e2a` (later unavailable).
+- Current StudioNet address: `0xB676A1bF06811A093448F7ad39D8Fa65B075fC39`.
+- Deployment transaction: `0xddd3e000ec610efbaa98f81ed74c2032162a68cb3ff88db919c94f880d605405`.
 - Deployed source commit: `61f98e50c4f4cc8aa952c26fc3182226f4933762`.
 - Vercel URL: https://archivefuse.vercel.app/ (HTTP 200 verified).
 
@@ -43,13 +44,18 @@ The canonical-label detach issue is fixed in `contracts/archivefuse.py` with `_r
 
 The deployment receipt finalized with `MAJORITY_AGREE` and leader GenVM `SUCCESS`. Deployed source equality is proven at 53,004 bytes with SHA-256 `f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3`. Live archive 1 now has four digest-bound public records. `preview_candidates(3, 8)` surfaced record 4 at distance `0.03472933` while cluster membership remained unchanged. Resolution cases 1 and 2 finalized fail-closed as `INSUFFICIENT_EVIDENCE` (no cluster mutation). Curator grant transaction `0x87c40853e5be57324103af090661abcbb2a0945c8be2a0f7a5e1dcbe564a2947` returned true through the live genlayer-js read; revoke transaction `0xdd2002d3d77c1aa7dfdd6e71c2376a0e3cf38f0f6825a5470014d3ab8a5f1fe4` returned false. Full machine-readable proof is in `evidence/studionet.json` and `npm run verify:studionet`.
 
+## Recovery and positive live proof
+The old address failed repeated schema/code/state checks with `Contract not deployed` and `invalid_contract absent_runner_comment`. The unchanged source was redeployed at `0xB676A1bF06811A093448F7ad39D8Fa65B075fC39` in `0xddd3e000ec610efbaa98f81ed74c2032162a68cb3ff88db919c94f880d605405`; it finalized with GenVM SUCCESS/MAJORITY_AGREE, schema 26/26, and byte equality remained 53,004 bytes / SHA-256 `f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3`.
+
+Archive 3 uses the immutable charter and exact raw-byte Gutenberg digests. Archive transaction `0x5ac38d893ee284bcdac3f8fb5562e202afe97a8f67a72bd3de4b312d125a56e2`, record transactions `0x1efc15be277101ec6b6a54e4a06afedc669007b6aa14212f502cf62fa1393c28` and `0xbb698e7c6c7c5bdde845093987926997dc224b87c5f2dd7202b07954cc8ec586`, proposal `0xb57463560f81a878573bc7a761ba4a38dc0c958b03c612bc90708918ed714405`, and adjudication `0x4a93b55fa628a4c517718dac6920dc5d8e19b559cf6939f7d161f7fd7ddfb8d5` all finalized with GenVM SUCCESS. Case 2 is SAME_ENTITY with four anchor categories and cluster 1 containing records 5 and 6; canonical label is `Lewis Carroll (Charles Lutwidge Dodgson)` and active cluster count is 1.
+
+The raw-byte lesson is material: decoded text hashes differed from the exact HTTP bodies even though decoded fetches appeared stable. Archive 2 is preserved as historical fail-closed evidence; archive 3 is the corrected proof archive. Direct `preview_candidates` returned no payload during the recovery runtime, but the proposal’s frozen candidate context recorded record 6 at distance `0.07660948`; this is not described as a direct preview proof. No live correction proposal/detach, append/merge or hosted injected-wallet write is claimed.
+
 ## Verification truth
 What remains unproven:
 - The hosted frontend is live at https://archivefuse.vercel.app/. A hosted injected-wallet write was not exercised by this agent.
-- Archive 2 used a commit-pinned immutable charter and two independently fetched, digest-bound Gutenberg biographies. Both registrations finalized with GenVM SUCCESS. The proposal transaction `0xf4a59d2010936bbe225e68022e9821bfe4ce22d47b97859daf07fcc152559e48` ultimately finalized after appeal with GenVM ERROR (`invalid_contract absent_runner_comment`), so no positive SAME_ENTITY result is claimed.
-- After that proposal, StudioNet ordinary reads and VecDB reads repeatedly returned `invalid_contract absent_runner_comment`; no candidate payload, case state, cluster, append/merge, or correction proof is claimed from the impaired runtime.
-- Archive 1’s two earlier fail-closed cases remain valid historical evidence. `DETACH_MEMBER` and canonical-label refresh remain proven in Direct Mode only.
-- The evidence manifest preserves all successful archive-2 hashes and the failed CLI/appeal attempts without treating them as successful proof.
+- Live correction proposal/detach, cluster append/merge, and direct `preview_candidates` payload proof remain unproven. The correction detach and canonical-label refresh remain proven in Direct Mode.
+- Archive 2’s historical decoded-text-hash failure and earlier invalid-contract runtime errors remain preserved in the evidence manifest.
 
 ## Release handoff
-The source fix, runtime verification, CI confirmation, StudioNet deployment, schema verification, live fail-closed lifecycle proof and Vercel frontend deployment are complete on the deployed source commit above. A hosted injected-wallet write remains unexercised by this agent.
+The source fix, runtime verification, CI confirmation, original deployment, same-source StudioNet recovery deployment, schema verification and Vercel frontend deployment are complete on the deployed source commit above. The old address failed schema/code/state checks with `Contract not deployed` and `invalid_contract absent_runner_comment`; this is recorded as StudioNet state loss. A hosted injected-wallet write remains unexercised by this agent.

@@ -98,7 +98,7 @@ npm run build
 
 The Direct Mode suite contains adversarial lifecycle coverage for authorization, semantic-retrieval boundaries, digest failure, duplicate/stale cases, cluster merges and versioned corrections. It must actually run under `genlayer-test` before release; source presence alone is not a pass.
 
-Before release, keep `package-lock.json` committed and use `npm ci` in CI. The current candidate has proven a clean `npm ci`, Direct Mode 52/52, `genvm-lint`, typecheck, ESLint, production build and green GitHub Actions run `32779738886`. The verified StudioNet contract is `0x35070251e889dC4d688Fd52313cd420b25cD4e2a`.
+Before release, keep `package-lock.json` committed and use `npm ci` in CI. The current candidate has proven a clean `npm ci`, Direct Mode 52/52, `genvm-lint`, typecheck, ESLint, production build and green GitHub Actions run `32789925156` for source release `55db727ed6ed34d19c4faabc60d06633723ed42b`.
 
 ## StudioNet deployment
 
@@ -122,7 +122,7 @@ A deployment transaction being submitted or even `FINALIZED` is not enough: insp
 ## Deployment status
 See [`DEPLOYMENT.json`](./DEPLOYMENT.json) and [`handoff.md`](./handoff.md) for the real contract address, source commit and deployment transaction.
 
-The verified StudioNet deployment uses source commit `61f98e50c4f4cc8aa952c26fc3182226f4933762` and deployment transaction `0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359`. Live lifecycle proof recorded archive 1, two digest-bound public records, a VecDB candidate preview, a fail-closed `INSUFFICIENT_EVIDENCE` resolution, and curator grant/revoke. The hosted frontend is live at https://archivefuse.vercel.app/.
+The original StudioNet deployment `0x35070251e889dC4d688Fd52313cd420b25cD4e2a` later became unavailable (`Contract not deployed` / `invalid_contract absent_runner_comment`). The exact unchanged source was redeployed at `0xB676A1bF06811A093448F7ad39D8Fa65B075fC39` in transaction `0xddd3e000ec610efbaa98f81ed74c2032162a68cb3ff88db919c94f880d605405`, with source commit `61f98e50c4f4cc8aa952c26fc3182226f4933762`. The hosted frontend is live at https://archivefuse.vercel.app/ and must be configured with the current address.
 
 ## Evidence and live proof
 
@@ -130,7 +130,9 @@ The machine-readable evidence package is [`evidence/studionet.json`](./evidence/
 
 The complete schema verifier reports 26 actual and 26 expected methods, with no missing or unexpected methods. The live proof verifier confirms archive state, four immutable records, digest bindings, VecDB retrieval without membership mutation, two terminal fail-closed resolution cases, and curator grant/revoke state. No positive `SAME_ENTITY` cluster was claimed: StudioNet validators independently reported that the bound public sources could not be established. No live correction, cluster append/merge, or hosted injected-wallet write was claimed. The existing Direct Mode suite remains the proof for `DETACH_MEMBER` and canonical-label refresh.
 
-Archive 2 was then created with an immutable commit-pinned charter at [`evidence/archive-charter.md`](./evidence/archive-charter.md), commit `826708f3350c27ee3029c7bf5004a526cee638d6`, URL `https://raw.githubusercontent.com/ometere123/archivefuse/826708f3350c27ee3029c7bf5004a526cee638d6/evidence/archive-charter.md`, and SHA-256 `a814b97a9bfa5b1acb76d0e73a40c43b1b7b8b1c274b0bd72f6d0db6ae488d3f`. The archive creation and two record registrations finalized with GenVM `SUCCESS`; both records are readable and unclustered. The positive proposal attempt finalized after appeal with GenVM `ERROR` (`invalid_contract absent_runner_comment`), and the later StudioNet read/VecDB path returned the same runtime error. Therefore no live `SAME_ENTITY`, cluster, correction, append/merge, or hosted-wallet write is claimed. Archive 1’s fail-closed history remains preserved in the manifest.
+Archive 2 was created with the immutable commit-pinned charter but initially used hashes computed from decoded PowerShell text; its positive case therefore failed closed. Archive 3 corrected this by binding the exact stable raw HTTP bytes: Gutenberg 33385 is 913,559 bytes with SHA-256 `20e308f88e199e0ee090bf1bb68d0f9cf959a249b5aa269396a05f1e8c740dae`, and Gutenberg 35418 is 419,142 bytes with SHA-256 `0a1c50383db4e01dbd8ee4c2d66647accb3a4313600894251053f6cd08c65503`. Both were fetched twice with identical bytes. Case 2 finalized with GenVM `SUCCESS` as `SAME_ENTITY`, storing `NAME_ALIAS`, `DATE`, `PLACE` and `ROLE_OCCUPATION`, and deterministically created cluster 1 with records 5 and 6. The old deployment’s fail-closed history and archive 2 remain preserved in the manifest. Direct `preview_candidates` RPC did not return a payload during recovery; the proposal’s frozen candidate context did record record 6, and this is distinguished from a direct preview proof. No live correction detach, cluster append/merge, or hosted-wallet write is claimed.
+
+The original StudioNet deployment later became unavailable and was recovered at the current address with the identical verified contract source. The recovery deployment and archive 3 positive proof are recorded in [`evidence/studionet.json`](./evidence/studionet.json).
 
 ## Security / privacy boundary
 ArchiveFuse is for public historical material. Contract state and vectors are public. Embeddings are not encryption. The MVP rejects PERSON records later than the archive's configured historical cutoff. Registered browser source previews are sandboxed as untrusted content; consensus independently fetches and verifies source bytes.

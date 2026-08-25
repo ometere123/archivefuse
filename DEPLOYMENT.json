@@ -1,8 +1,8 @@
 {
   "network": "StudioNet",
   "chainId": 61999,
-  "contractAddress": "0x35070251e889dC4d688Fd52313cd420b25cD4e2a",
-  "deploymentTransaction": "0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359",
+  "contractAddress": "0xB676A1bF06811A093448F7ad39D8Fa65B075fC39",
+  "deploymentTransaction": "0xddd3e000ec610efbaa98f81ed74c2032162a68cb3ff88db919c94f880d605405",
   "sourceCommit": "61f98e50c4f4cc8aa952c26fc3182226f4933762",
   "frontendUrl": "https://archivefuse.vercel.app/",
   "status": "LIVE"

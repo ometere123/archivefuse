@@ -37,10 +37,10 @@ async function verifyTransaction(hash) {
 }
 
 const verifiedTransactions = [];
-for (const item of manifest.transactions || []) if (item.hash) verifiedTransactions.push({ ...item, ...(await verifyTransaction(item.hash)) });
+for (const item of manifest.liveTransactions || manifest.transactions || []) if (item.hash) verifiedTransactions.push({ ...item, ...(await verifyTransaction(item.hash)) });
 
 const stats = await client.readContract({ address, functionName: "stats", args: [] });
-const archiveEntries = [manifest.archive, manifest.archive2].filter(Boolean);
+const archiveEntries = [manifest.liveArchive2, manifest.liveArchive].filter(Boolean);
 const archives = [];
 for (const entry of archiveEntries) {
   const expectedArchive = entry.state;
@@ -53,20 +53,30 @@ for (const entry of archiveEntries) {
 }
 
 const records = [];
-for (const expected of manifest.records || []) {
+for (const expected of manifest.liveRecords || manifest.records || []) {
   const actual = await client.readContract({ address, functionName: "get_record", args: [BigInt(expected.id)] });
   records.push(actual);
   for (const field of ["archive_id", "entity_type", "entity_type_code", "title", "summary", "source_url", "source_digest", "names_json", "dates_json", "places_json", "roles_json", "latest_year"]) check(`record ${expected.id} ${field}`, actual[field] === expected.state[field], `${actual[field]} != ${expected.state[field]}`);
-  check(`record ${expected.id} unclustered`, actual.cluster_id === 0);
+  check(`record ${expected.id} cluster state`, actual.cluster_id === expected.state.cluster_id, `${actual.cluster_id} != ${expected.state.cluster_id}`);
 }
 
-const vec = manifest.vecdbProof;
-const candidates = await client.readContract({ address, functionName: "preview_candidates", args: [BigInt(vec.recordId), BigInt(vec.requestedK)] });
-check("VecDB expected candidate", candidates.some((x) => x.record_id === vec.candidate.record_id && x.title === vec.candidate.title && x.distance === vec.candidate.distance));
-check("VecDB retrieval leaves membership unchanged", vec.retrievalMutatedMembership === false && records.find((x) => x.id === vec.recordId)?.cluster_id === 0);
+const vec = manifest.liveVecdbProof || manifest.vecdbProof;
+let candidates = [];
+if (vec.mode === "proposal_frozen_context") {
+  const expectedResolution = (manifest.liveResolutions || []).find((x) => x.state.record_a === vec.recordId);
+  const proofCase = expectedResolution ? await client.readContract({ address, functionName: "get_case", args: [BigInt(expectedResolution.caseId)] }) : null;
+  const frozenCandidates = proofCase ? JSON.parse(proofCase.candidate_context_json || "[]") : [];
+  candidates = frozenCandidates;
+  check("VecDB frozen candidate context", frozenCandidates.some((x) => x.record_id === vec.candidate.record_id && x.title === vec.candidate.title && x.distance === vec.candidate.distance));
+  check("VecDB retrieval leaves membership unchanged", vec.retrievalMutatedMembership === false && vec.membershipBefore[`record${vec.recordId}`] === 0 && vec.membershipBefore[`record${vec.candidate.record_id}`] === 0);
+} else {
+  candidates = await client.readContract({ address, functionName: "preview_candidates", args: [BigInt(vec.recordId), BigInt(vec.requestedK)] });
+  check("VecDB expected candidate", candidates.some((x) => x.record_id === vec.candidate.record_id && x.title === vec.candidate.title && x.distance === vec.candidate.distance));
+  check("VecDB retrieval leaves membership unchanged", vec.retrievalMutatedMembership === false && records.find((x) => x.id === vec.recordId)?.cluster_id === 0);
+}
 
 const resolutionStates = [];
-for (const expected of manifest.resolutions || []) {
+for (const expected of manifest.liveResolutions || manifest.resolutions || []) {
   const actual = await client.readContract({ address, functionName: "get_case", args: [BigInt(expected.caseId)] });
   resolutionStates.push(actual);
   check(`case ${expected.caseId} pair`, actual.record_a === expected.state.record_a && actual.record_b === expected.state.record_b);
@@ -83,9 +93,12 @@ for (const expected of manifest.resolutions || []) {
   }
 }
 
-const curator = manifest.curatorProof;
-const curatorState = await client.readContract({ address, functionName: "is_curator", args: [BigInt(curator.archiveId), curator.curator] });
-check("curator revoked", curatorState === curator.stateAfterRevoke);
+const curator = manifest.liveCuratorProof;
+let curatorState = null;
+if (curator) {
+  curatorState = await client.readContract({ address, functionName: "is_curator", args: [BigInt(curator.archiveId), curator.curator] });
+  check("curator revoked", curatorState === curator.stateAfterRevoke);
+}
 
 const output = { ok: failures.length === 0, address, sourceProof, stats, archives, records, candidates, resolutionStates, curatorState, verifiedTransactions, checks, failures, manifest: manifestPath };
 console.log(JSON.stringify(output, null, 2));

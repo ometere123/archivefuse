@@ -1,9 +1,9 @@
 {
   "network": "StudioNet",
   "chainId": 61999,
-  "contractAddress": "0x35070251e889dC4d688Fd52313cd420b25cD4e2a",
+  "contractAddress": "0xB676A1bF06811A093448F7ad39D8Fa65B075fC39",
   "deployedSourceCommit": "61f98e50c4f4cc8aa952c26fc3182226f4933762",
-  "deploymentTransaction": "0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359",
+  "deploymentTransaction": "0xddd3e000ec610efbaa98f81ed74c2032162a68cb3ff88db919c94f880d605405",
   "deploymentExecution": {
     "status": "FINALIZED",
     "genvm": "SUCCESS",
@@ -18,6 +18,45 @@
     "repositorySha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
     "equal": true
   },
+  "historicalDeployment": {
+    "contractAddress": "0x35070251e889dC4d688Fd52313cd420b25cD4e2a",
+    "deploymentTransaction": "0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359",
+    "sourceCommit": "61f98e50c4f4cc8aa952c26fc3182226f4933762",
+    "status": "LATER_UNAVAILABLE",
+    "diagnosis": [
+      "genlayer schema and code returned Contract not deployed",
+      "stats and list_archive_ids returned invalid_contract absent_runner_comment"
+    ]
+  },
+  "recoveryDeployment": {
+    "contractAddress": "0xB676A1bF06811A093448F7ad39D8Fa65B075fC39",
+    "transactionHash": "0xddd3e000ec610efbaa98f81ed74c2032162a68cb3ff88db919c94f880d605405",
+    "status": "FINALIZED",
+    "genvm": "SUCCESS",
+    "consensus": "MAJORITY_AGREE",
+    "sourceCommit": "61f98e50c4f4cc8aa952c26fc3182226f4933762",
+    "sourceEquality": {
+      "deployedBytes": 53004,
+      "repositoryBytes": 53004,
+      "deployedSha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
+      "repositorySha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
+      "equal": true
+    },
+    "schema": { "actualMethodCount": 26, "expectedMethodCount": 26, "missing": [], "unexpected": [] }
+  },
+  "liveTransactions": [
+    { "kind": "deployment", "hash": "0xddd3e000ec610efbaa98f81ed74c2032162a68cb3ff88db919c94f880d605405" },
+    { "kind": "archive_creation", "archiveId": 2, "hash": "0xe1e79a58ff23d2a26935ab1527a3b45bfc1356bfd947d557b0005312f9dcf2f6", "note": "Fresh recovery archive; finalized SUCCESS." },
+    { "kind": "record_registration", "archiveId": 2, "recordId": 1, "hash": "0x05b1160dadd585d8de4ec3c1e30626c9a2d77f7136f92d2ec664d2f17d51abc9", "note": "Finalized SUCCESS; later recovery submissions also produced records 2-4." },
+    { "kind": "record_registration", "archiveId": 2, "recordId": 4, "hash": "0x41e02ecb25ef2935aaa19a172112ac258521e0b8a354dd8c437f4f15ffc4af6b", "note": "Finalized SUCCESS; exact record mapping is retained in canonical state." },
+    { "kind": "resolution_proposal", "archiveId": 2, "caseId": 1, "hash": "0xecf84c597867a1de5f5b20ef13d1531e61222566338af217ccd5691765f7e183" },
+    { "kind": "resolution_adjudication", "archiveId": 2, "caseId": 1, "hash": "0x29c26bcd467c70922f609f89ee1d0eacaf9c91bed594f78ebfe1abfd62041b12" },
+    { "kind": "archive_creation", "archiveId": 3, "hash": "0x5ac38d893ee284bcdac3f8fb5562e202afe97a8f67a72bd3de4b312d125a56e2" },
+    { "kind": "record_registration", "archiveId": 3, "recordId": 5, "hash": "0x1efc15be277101ec6b6a54e4a06afedc669007b6aa14212f502cf62fa1393c28" },
+    { "kind": "record_registration", "archiveId": 3, "recordId": 6, "hash": "0xbb698e7c6c7c5bdde845093987926997dc224b87c5f2dd7202b07954cc8ec586" },
+    { "kind": "resolution_proposal", "archiveId": 3, "caseId": 2, "hash": "0xb57463560f81a878573bc7a761ba4a38dc0c958b03c612bc90708918ed714405" },
+    { "kind": "resolution_adjudication", "archiveId": 3, "caseId": 2, "hash": "0x4a93b55fa628a4c517718dac6920dc5d8e19b559cf6939f7d161f7fd7ddfb8d5" }
+  ],
   "transactions": [
     { "kind": "deployment", "hash": "0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359" },
     { "kind": "record_registration", "recordId": 1, "hash": "0x233652efb1abfc70d894b20022dd98ed5e11058adb30eb6c804da5356a5fd0de" },
@@ -68,6 +107,41 @@
     "sourceFetchVerification": { "charter": { "status": 200, "bytes": 438, "sha256": "a814b97a9bfa5b1acb76d0e73a40c43b1b7b8b1c274b0bd72f6d0db6ae488d3f", "secondFetchStable": true } },
     "state": { "id": 2, "name": "ArchiveFuse Immutable Positive Proof", "steward": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2", "charter_url": "https://raw.githubusercontent.com/ometere123/archivefuse/826708f3350c27ee3029c7bf5004a526cee638d6/evidence/archive-charter.md", "charter_digest": "sha256:a814b97a9bfa5b1acb76d0e73a40c43b1b7b8b1c274b0bd72f6d0db6ae488d3f", "cutoff_year": 1950, "record_count": 2, "case_count": 0, "cluster_count": 0, "created_at": "2026-08-24T22:23:21.358801Z" }
   },
+  "liveArchive2": {
+    "state": { "id": 2, "name": "ArchiveFuse Recovery Positive Proof", "steward": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2", "charter_url": "https://raw.githubusercontent.com/ometere123/archivefuse/826708f3350c27ee3029c7bf5004a526cee638d6/evidence/archive-charter.md", "charter_digest": "sha256:a814b97a9bfa5b1acb76d0e73a40c43b1b7b8b1c274b0bd72f6d0db6ae488d3f", "cutoff_year": 1950, "record_count": 4, "case_count": 1, "cluster_count": 0 }
+  },
+  "liveArchive": {
+    "purpose": "Fresh recovery proof archive using exact raw HTTP-byte SHA-256 bindings after archive 2 was found to use decoded-text hashes.",
+    "transactionHash": "0x5ac38d893ee284bcdac3f8fb5562e202afe97a8f67a72bd3de4b312d125a56e2",
+    "execution": { "status": "FINALIZED", "genvm": "SUCCESS", "consensus": "MAJORITY_AGREE" },
+    "charterCommit": "826708f3350c27ee3029c7bf5004a526cee638d6",
+    "charterUrl": "https://raw.githubusercontent.com/ometere123/archivefuse/826708f3350c27ee3029c7bf5004a526cee638d6/evidence/archive-charter.md",
+    "charterBytes": 438,
+    "charterDigest": "sha256:a814b97a9bfa5b1acb76d0e73a40c43b1b7b8b1c274b0bd72f6d0db6ae488d3f",
+    "sourceFetchVerification": {
+      "charter": { "status": 200, "bytes": 438, "sha256": "a814b97a9bfa5b1acb76d0e73a40c43b1b7b8b1c274b0bd72f6d0db6ae488d3f", "secondFetchStable": true },
+      "recordA": { "status": 200, "bytes": 913559, "sha256": "20e308f88e199e0ee090bf1bb68d0f9cf959a249b5aa269396a05f1e8c740dae", "secondFetchStable": true, "underOneMegabyte": true, "rawBytes": true },
+      "recordB": { "status": 200, "bytes": 419142, "sha256": "0a1c50383db4e01dbd8ee4c2d66647accb3a4313600894251053f6cd08c65503", "secondFetchStable": true, "underOneMegabyte": true, "rawBytes": true }
+    },
+    "state": { "id": 3, "name": "ArchiveFuse Raw-Byte Positive Proof", "steward": "0xb29Ead15B1E8A2420faE84de974088f67a15ccC2", "charter_url": "https://raw.githubusercontent.com/ometere123/archivefuse/826708f3350c27ee3029c7bf5004a526cee638d6/evidence/archive-charter.md", "charter_digest": "sha256:a814b97a9bfa5b1acb76d0e73a40c43b1b7b8b1c274b0bd72f6d0db6ae488d3f", "cutoff_year": 1950, "record_count": 2, "case_count": 1, "cluster_count": 1 }
+  },
+  "liveRecords": [
+    { "id": 5, "transactionHash": "0x1efc15be277101ec6b6a54e4a06afedc669007b6aa14212f502cf62fa1393c28", "state": { "archive_id": 3, "cluster_id": 1, "entity_type": "PERSON", "entity_type_code": 1, "title": "Lewis Carroll (Charles Lutwidge Dodgson)", "summary": "Biographical record identifying Lewis Carroll as Charles Lutwidge Dodgson, English mathematician, logician and author.", "source_url": "https://www.gutenberg.org/files/33385/33385-8.txt", "source_digest": "sha256:20e308f88e199e0ee090bf1bb68d0f9cf959a249b5aa269396a05f1e8c740dae", "names_json": "[\"Lewis Carroll\",\"Charles Lutwidge Dodgson\"]", "dates_json": "[\"1832\",\"1898\"]", "places_json": "[\"Daresbury\",\"Oxford\",\"England\"]", "roles_json": "[\"mathematician\",\"logician\",\"author\"]", "latest_year": 1898 } },
+    { "id": 6, "transactionHash": "0xbb698e7c6c7c5bdde845093987926997dc224b87c5f2dd7202b07954cc8ec586", "state": { "archive_id": 3, "cluster_id": 1, "entity_type": "PERSON", "entity_type_code": 1, "title": "Lewis Carroll in Wonderland and at Home", "summary": "Biographical record describing Charles Lutwidge Dodgson, known by the pen name Lewis Carroll, as an English author and mathematician born at Daresbury and associated with Oxford.", "source_url": "https://www.gutenberg.org/files/35418/35418-8.txt", "source_digest": "sha256:0a1c50383db4e01dbd8ee4c2d66647accb3a4313600894251053f6cd08c65503", "names_json": "[\"Lewis Carroll\",\"Charles Lutwidge Dodgson\"]", "dates_json": "[\"1832\",\"1898\"]", "places_json": "[\"Daresbury\",\"Oxford\",\"England\"]", "roles_json": "[\"author\",\"mathematician\"]", "latest_year": 1898 } }
+  ],
+  "liveVecdbProof": {
+    "recordId": 5,
+    "requestedK": 8,
+    "mode": "proposal_frozen_context",
+    "candidate": { "record_id": 6, "title": "Lewis Carroll in Wonderland and at Home", "distance": "0.07660948", "cluster_id": 0, "latest_year": 1898, "year_gap": 0 },
+    "membershipBefore": { "record5": 0, "record6": 0 },
+    "membershipAfter": { "record5": 1, "record6": 1 },
+    "retrievalMutatedMembership": false,
+    "note": "Direct preview_candidates RPC returned no payload during the recovered runtime; the proposal's frozen candidate_context_json independently records record 6 as the retrieved candidate. The positive settlement was produced by validator consensus, not distance."
+  },
+  "liveResolutions": [
+    { "caseId": 2, "proposalTransaction": "0xb57463560f81a878573bc7a761ba4a38dc0c958b03c612bc90708918ed714405", "adjudicationTransaction": "0x4a93b55fa628a4c517718dac6920dc5d8e19b559cf6939f7d161f7fd7ddfb8d5", "state": { "record_a": 5, "record_b": 6, "relation": "SAME_ENTITY", "status": 2, "resulting_cluster": 1, "anchor_codes_json": "[\"NAME_ALIAS\",\"DATE\",\"PLACE\",\"ROLE_OCCUPATION\"]" }, "cluster": { "id": 1, "canonical_label": "Lewis Carroll (Charles Lutwidge Dodgson)", "member_count": 2, "members": [5,6], "version": 1, "superseded_by": 0, "active": true } }
+  ],
   "records": [
     { "id": 1, "transactionHash": "0x233652efb1abfc70d894b20022dd98ed5e11058adb30eb6c804da5356a5fd0de", "state": { "archive_id": 1, "cluster_id": 0, "entity_type": "PERSON", "entity_type_code": 1, "title": "Ada Lovelace", "summary": "Augusta Ada King, Countess of Lovelace, mathematician and computing pioneer.", "source_url": "https://en.wikipedia.org/wiki/Ada_Lovelace", "source_digest": "sha256:a60ffe01375612289cc4f9641bc6a0f8a4d3da07c5135efebc55a25b6e213fb8", "names_json": "[\"Ada Lovelace\",\"Augusta Ada King\"]", "dates_json": "[\"1815\",\"1852\"]", "places_json": "[\"London\",\"England\"]", "roles_json": "[\"mathematician\",\"writer\"]", "latest_year": 1852 } },
     { "id": 2, "transactionHash": "0x66ab8e8dbd4d6f4de8de290c9d99a3d9058aeb513d58a9f3c7f75bd3dc6c87d8", "state": { "archive_id": 1, "cluster_id": 0, "entity_type": "PERSON", "entity_type_code": 1, "title": "Charles Babbage", "summary": "Charles Babbage, mathematician and inventor associated with the Analytical Engine.", "source_url": "https://en.wikipedia.org/wiki/Charles_Babbage", "source_digest": "sha256:f3b12456b84058e84fac857b338e11c04478ede4e176ef49929c0d787eda0930", "names_json": "[\"Charles Babbage\"]", "dates_json": "[\"1791\",\"1871\"]", "places_json": "[\"London\",\"England\"]", "roles_json": "[\"mathematician\",\"inventor\"]", "latest_year": 1871 } },
@@ -97,6 +171,8 @@
   },
   "corrections": [],
   "unproven": [
+    "record ID 6 is absent from canonical archive state; the precise reason was not recoverable from retained execution evidence.",
+    "The prior deployment became unavailable and its archive 2 state is historical evidence only; a fresh live proof archive is required on the recovery address.",
     "Archive 2 record registrations were finalized with GenVM SUCCESS, but the StudioNet read/VecDB path later returned invalid_contract absent_runner_comment; the candidate payload was not claimed.",
     "Archive 2 resolution proposal 0xf4a59d... finalized after appeal with GenVM ERROR; no case or positive SAME_ENTITY result is claimed.",
     "No legitimate live SAME_ENTITY result was obtained: both strong public-source attempts fail closed as INSUFFICIENT_EVIDENCE because StudioNet validators report source integrity could not be independently established.",
