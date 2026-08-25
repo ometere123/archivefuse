@@ -54,7 +54,7 @@ The raw-byte lesson is material: decoded text hashes differed from the exact HTT
 
 ## Verification truth
 What remains unproven:
-- The hosted frontend is live at https://archivefuse.vercel.app/. A hosted injected-wallet write was not exercised by this agent.
+- The hosted frontend is live at https://archivefuse.vercel.app/ and now displays the corrected contract address. A hosted injected-wallet write was not exercised by this agent.
 - Live correction proposal/detach, cluster append/merge, and direct `preview_candidates` payload proof remain unproven. The correction detach and canonical-label refresh remain proven in Direct Mode.
 - Archive 2’s historical decoded-text-hash failure and earlier invalid-contract runtime errors remain preserved in the evidence manifest.
 

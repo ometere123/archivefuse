@@ -10,6 +10,17 @@
     "consensus": "MAJORITY_AGREE"
   },
   "frontendUrl": "https://archivefuse.vercel.app/",
+  "hostedFrontendProof": {
+    "url": "https://archivefuse.vercel.app/",
+    "deploymentId": "dpl_KAvdZmiqUUyhohYoSFGCBywEqrxN",
+    "deploymentUrl": "https://archivefuse-aqrt4nd7l-delealufejoel-4184s-projects.vercel.app",
+    "target": "production",
+    "readyState": "READY",
+    "aliased": true,
+    "liveContractDisplayed": "0xBd71A829AbdECa647514752A86167c3BDFF1BAf1",
+    "httpProof": "Production HTML returned HTTP success and displayed the corrected contract address.",
+    "walletWrite": "UNPROVEN"
+  },
   "sourceEquality": {
     "repositoryPath": "contracts/archivefuse.py",
     "deployedBytes": 53335,

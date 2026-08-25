@@ -124,7 +124,7 @@ A deployment transaction being submitted or even `FINALIZED` is not enough: insp
 ## Deployment status
 See [`DEPLOYMENT.json`](./DEPLOYMENT.json) and [`handoff.md`](./handoff.md) for the real contract address, source commit and deployment transaction.
 
-The original StudioNet deployment `0x35070251e889dC4d688Fd52313cd420b25cD4e2a` later became unavailable. A recovery deployment at `0xB676A1bF06811A093448F7ad39D8Fa65B075fC39` is preserved historically. The current corrected deployment is `0xBd71A829AbdECa647514752A86167c3BDFF1BAf1`, transaction `0xf7bbf97dd2c056b485952ce1f211ab3e272832900617ef75170329743a2af55a`, source commit `8fe09e0bc07967d4a3c46d1a7990fe7df9b73a25`. The hosted frontend is live at https://archivefuse.vercel.app/ and should use the current address.
+The original StudioNet deployment `0x35070251e889dC4d688Fd52313cd420b25cD4e2a` later became unavailable. A recovery deployment at `0xB676A1bF06811A093448F7ad39D8Fa65B075fC39` is preserved historically. The current corrected deployment is `0xBd71A829AbdECa647514752A86167c3BDFF1BAf1`, transaction `0xf7bbf97dd2c056b485952ce1f211ab3e272832900617ef75170329743a2af55a`, source commit `8fe09e0bc07967d4a3c46d1a7990fe7df9b73a25`. The hosted frontend is live at https://archivefuse.vercel.app/ and now displays the corrected address; a hosted wallet write remains unproven.
 
 ## Evidence and live proof
 
