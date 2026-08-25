@@ -18,6 +18,21 @@
     "repositorySha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
     "equal": true
   },
+  "hardeningSource": {
+    "commit": "8fe09e0bc07967d4a3c46d1a7990fe7df9b73a25",
+    "contractSourceChanged": true,
+    "repositoryWorkingTreeBytes": 53335,
+    "repositoryWorkingTreeSha256": "c2366984a5cb34578f4233b2e77876e623877bcdda5d0a215eff5f5fb884b589",
+    "gitBlobBytes": 53335,
+    "gitBlobSha256": "c2366984a5cb34578f4233b2e77876e623877bcdda5d0a215eff5f5fb884b589",
+    "workingTreeEqualsGitBlob": true,
+    "deployedPayloadComparison": "not yet available: corrected source has not been deployed",
+    "previousDeploymentPayloadBytes": 53004,
+    "previousDeploymentPayloadSha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
+    "previousGitBlobBytes": 52248,
+    "previousGitBlobSha256": "c5f1327540bd7fa540d873d5d3066663d69a3d1d66c6f816f01fb455c106c369",
+    "previousRepresentationFinding": "The old deployed payload and working tree used CRLF while the source-commit Git blob used LF; they were not the same byte representation."
+  },
   "historicalDeployment": {
     "contractAddress": "0x35070251e889dC4d688Fd52313cd420b25cD4e2a",
     "deploymentTransaction": "0x084b1fdac390cd1fb4cd2761c552658a06572d9a8ca87769a5980fe1eea92359",

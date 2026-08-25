@@ -5,5 +5,6 @@
   "deploymentTransaction": "0xddd3e000ec610efbaa98f81ed74c2032162a68cb3ff88db919c94f880d605405",
   "sourceCommit": "61f98e50c4f4cc8aa952c26fc3182226f4933762",
   "frontendUrl": "https://archivefuse.vercel.app/",
-  "status": "LIVE"
+  "status": "LIVE_PENDING_HARDENED_REDEPLOY",
+  "pendingSourceCommit": "8fe09e0bc07967d4a3c46d1a7990fe7df9b73a25"
 }
