@@ -64,15 +64,14 @@
     "genvm": "SUCCESS",
     "consensus": "MAJORITY_AGREE",
     "sourceCommit": "61f98e50c4f4cc8aa952c26fc3182226f4933762",
-  "sourceEquality": {
-    "deployedBytes": 53335,
-    "repositoryBytes": 53335,
-    "deployedSha256": "c2366984a5cb34578f4233b2e77876e623877bcdda5d0a215eff5f5fb884b589",
-    "repositorySha256": "c2366984a5cb34578f4233b2e77876e623877bcdda5d0a215eff5f5fb884b589",
-    "equal": true,
-    "gitBlobBytes": 53335,
-    "gitBlobSha256": "c2366984a5cb34578f4233b2e77876e623877bcdda5d0a215eff5f5fb884b589",
-    "deployedEqualsGitBlob": true
+    "sourceEquality": {
+      "deployedBytes": 53004,
+      "repositoryBytes": 53004,
+      "deployedSha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
+      "repositorySha256": "f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3",
+      "equal": true
+    },
+    "schema": { "actualMethodCount": 26, "expectedMethodCount": 26, "missing": [], "unexpected": [] }
   },
   "currentDeployment": {
     "contractAddress": "0xBd71A829AbdECa647514752A86167c3BDFF1BAf1",
@@ -81,8 +80,6 @@
     "genvm": "SUCCESS",
     "consensus": "MAJORITY_AGREE",
     "sourceCommit": "8fe09e0bc07967d4a3c46d1a7990fe7df9b73a25",
-    "schema": { "actualMethodCount": 26, "expectedMethodCount": 26, "missing": [], "unexpected": [] }
-  },
     "schema": { "actualMethodCount": 26, "expectedMethodCount": 26, "missing": [], "unexpected": [] }
   },
   "liveTransactions": [
@@ -240,7 +237,7 @@
   "currentVecdbProof": { "recordId": 1, "requestedK": 8, "mode": "proposal_frozen_context", "candidate": { "record_id": 2, "title": "Lewis Carroll in Wonderland and at Home", "distance": "0.07660948", "cluster_id": 0, "latest_year": 1898, "year_gap": 0 }, "membershipBefore": { "record1": 0, "record2": 0 }, "membershipAfter": { "record1": 1, "record2": 1 }, "retrievalMutatedMembership": false, "note": "The proposal's frozen candidate_context_json records record 2; direct preview_candidates was attempted on the corrected deployment but did not return a payload within the CLI read window." },
   "currentResolutions": [ { "caseId": 1, "proposalTransaction": "0x55b839182d7be9bb73a3240513295565057a7ad21ca84abb67c815e01210bcfd", "adjudicationTransaction": "0xce669822bbaea9f33358fc000412e584601284d1ecefcc869d657844ae92f54e", "state": { "record_a": 1, "record_b": 2, "relation": "SAME_ENTITY", "status": 2, "resulting_cluster": 1, "anchor_codes_json": "[\"NAME_ALIAS\",\"DATE\",\"PLACE\",\"ROLE_OCCUPATION\"]" }, "cluster": { "id": 1, "canonical_label": "Lewis Carroll (Charles Lutwidge Dodgson)", "member_count": 2, "members": [1, 2], "version": 1, "superseded_by": 0, "active": true } } ],
   "unproven": [
-    "Direct preview_candidates did not return a payload during the recovery session; the successful proposal's frozen candidate context independently records record 6 as the retrieved candidate.",
+    "Direct preview_candidates did not return a payload on the current corrected deployment; the successful current proposal's frozen candidate context independently records record 2 as the retrieved candidate.",
     "Live cluster append/merge was not exercised.",
     "Live correction proposal/detach was not exercised; DETACH_MEMBER and canonical-label refresh remain proven in Direct Mode.",
     "Hosted Vercel injected-wallet write was not exercised.",
