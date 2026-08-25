@@ -18,7 +18,7 @@ export function ArchiveShell({ children }: { children: React.ReactNode }) {
         <nav className="main-nav" aria-label="Primary">{nav.map(([href, label]) => <Link key={href} className={pathname === href ? "active" : ""} href={href}>{label}</Link>)}</nav>
         <div className="session-tools">
           <div className={`network-stamp network-${wallet.network}`}><span className="dot" />{wallet.networkName}</div>
-          {wallet.address ? <button className="wallet-button" onClick={wallet.disconnect}>{short(wallet.address)}</button> : <button className="wallet-button" onClick={wallet.connect} disabled={!wallet.hasInjected || wallet.connecting}>{wallet.connecting ? "Connecting…" : wallet.hasInjected ? "Connect wallet" : "No wallet"}</button>}
+          {wallet.address ? <><span className="brand-sub" title={wallet.address}>{short(wallet.address)}</span><button className="wallet-button" onClick={wallet.disconnect} aria-label={`Disconnect wallet ${wallet.address}`}>Disconnect</button></> : <button className="wallet-button" onClick={wallet.connect} disabled={!wallet.hasInjected || wallet.connecting}>{wallet.connecting ? "Connecting…" : wallet.hasInjected ? "Connect wallet" : "No wallet"}</button>}
         </div>
       </header>
       <div className="provenance-strip"><span>Live source</span>{CONTRACT_ADDRESS ? <a href={explorerAddressUrl(CONTRACT_ADDRESS)} target="_blank" rel="noreferrer">StudioNet · {short(CONTRACT_ADDRESS)}</a> : <strong>Contract address not configured</strong>}{wallet.error ? <em>{wallet.error}</em> : null}</div>
