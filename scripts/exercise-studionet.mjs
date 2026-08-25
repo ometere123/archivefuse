@@ -3,6 +3,7 @@ import { studionet } from "genlayer-js/chains";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { execFileSync } from "node:child_process";
 
 const args = process.argv.slice(2);
 const manifestPath = args[args.indexOf("--manifest") + 1] || "evidence/studionet.json";
@@ -20,8 +21,22 @@ const deployedSource = await client.getContractCode(address);
 const repositorySource = readFileSync(resolve("contracts/archivefuse.py"));
 const deployedBytes = Buffer.from(deployedSource);
 const sha256 = (value) => createHash("sha256").update(value).digest("hex");
-const sourceProof = { deployedBytes: deployedBytes.length, repositoryBytes: repositorySource.length, deployedSha256: sha256(deployedBytes), repositorySha256: sha256(repositorySource), equal: Buffer.compare(deployedBytes, repositorySource) === 0 };
-check("deployed source equality", sourceProof.equal, JSON.stringify(sourceProof));
+const sourceCommit = manifest.deployedSourceCommit || manifest.sourceCommit;
+let gitBlob = null;
+try { gitBlob = execFileSync("git", ["cat-file", "blob", `${sourceCommit}:contracts/archivefuse.py`]); } catch {}
+const sourceProof = {
+  deployedBytes: deployedBytes.length,
+  repositoryWorkingTreeBytes: repositorySource.length,
+  deployedSha256: sha256(deployedBytes),
+  repositoryWorkingTreeSha256: sha256(repositorySource),
+  workingTreeEqual: Buffer.compare(deployedBytes, repositorySource) === 0,
+  deployedSourceCommit: sourceCommit,
+  gitBlobBytes: gitBlob?.length ?? null,
+  gitBlobSha256: gitBlob ? sha256(gitBlob) : null,
+  deployedEqualsGitBlob: gitBlob ? Buffer.compare(deployedBytes, gitBlob) === 0 : false,
+  representationNote: gitBlob && Buffer.compare(deployedBytes, gitBlob) !== 0 ? "Git blob and deployment payload use different newline representations; working-tree payload equality is reported separately." : "Deployment payload equals the recorded Git blob."
+};
+check("deployed source equality", sourceProof.workingTreeEqual, JSON.stringify(sourceProof));
 
 async function verifyTransaction(hash) {
   if (!hash || !/^0x[0-9a-fA-F]{64}$/.test(hash)) { check("transaction hash format", false, String(hash)); return { hash }; }

@@ -41,7 +41,7 @@ No Supabase. No Firebase. No SQL/Redis. No API server. No custom indexer. No moc
 - archive steward + curator authorization;
 - historical person cutoff policy;
 - bounded 384-dimensional contract-owned VecDB;
-- same-archive/same-type candidate filtering;
+- same-archive/same-type candidate filtering (within a deterministic global KNN scan bound; the current GenVM VecDB API has no server-side archive/type filter or offset);
 - source/evidence HTTPS + SHA-256 binding and source-size bounds;
 - optional resolution evidence requires URL + digest together;
 - custom `run_nondet_unsafe` validators independently re-fetch and re-reason;
@@ -49,12 +49,14 @@ No Supabase. No Firebase. No SQL/Redis. No API server. No custom indexer. No moc
 - duplicate pending pair/correction guards;
 - same-active-cluster challenges are forced into the correction flow;
 - deterministic `STALE` terminalization when canonical state changed after proposal;
-- deterministic cluster create/append/merge, max 64 active members;
+- deterministic cluster create/append/merge, max 64 active members; active membership is a unique projection of historical IDs, so detach/reattach and merge-back cannot duplicate active records;
 - active-cluster accounting separate from historical cluster objects;
 - correction proposals freeze proposal-time peer record IDs;
 - `DETACH_MEMBER` requires at least two shared contradiction-anchor categories;
 - original records and prior receipts remain addressable after correction;
 - no payment/token surface.
+
+Resolution proposals are intentionally permissionless: any address may submit a bounded, digest-bound case and any address may adjudicate or terminalize stale work. Duplicate pending-pair and pending-correction guards prevent concurrent conflicting receipts, while the threat model treats temporary proposal locking as an open-network spam trade-off rather than silently granting one operator authority. No payment, token or backend queue is used.
 
 ## Frontend
 The interface is a museum registrar's reading room rather than a generic AI dashboard:
@@ -96,9 +98,9 @@ npm run lint
 npm run build
 ```
 
-The Direct Mode suite contains adversarial lifecycle coverage for authorization, semantic-retrieval boundaries, digest failure, duplicate/stale cases, cluster merges and versioned corrections. It must actually run under `genlayer-test` before release; source presence alone is not a pass.
+The Direct Mode suite contains adversarial lifecycle coverage for authorization, semantic-retrieval boundaries, digest failure, duplicate/stale cases, cluster merges, detach/reattach cycles and versioned corrections. It must actually run under `genlayer-test` before release; source presence alone is not a pass.
 
-Before release, keep `package-lock.json` committed and use `npm ci` in CI. The current candidate has proven a clean `npm ci`, Direct Mode 52/52, `genvm-lint`, typecheck, ESLint, production build and green GitHub Actions run `32789925156` for source release `55db727ed6ed34d19c4faabc60d06633723ed42b`.
+Before release, keep `package-lock.json` committed and use `npm ci` in CI. The prior release proved a clean `npm ci`, Direct Mode 52/52, `genvm-lint`, typecheck, ESLint, production build and green GitHub Actions run `32801306180`; this hardening pass adds three lifecycle regressions and requires a new CI run for the final commit.
 
 ## StudioNet deployment
 
@@ -126,13 +128,17 @@ The original StudioNet deployment `0x35070251e889dC4d688Fd52313cd420b25cD4e2a` l
 
 ## Evidence and live proof
 
-The machine-readable evidence package is [`evidence/studionet.json`](./evidence/studionet.json). The deployed contract source was retrieved with the GenLayer toolchain and compared byte-for-byte with `contracts/archivefuse.py`: both are 53,004 bytes with SHA-256 `f82dfeb2a181ed8f4691bdbeb02c48886f248cf0aa95ad264c2183887e607ac3`.
+The machine-readable evidence package is [`evidence/studionet.json`](./evidence/studionet.json). Source reproducibility reports the exact representation being compared: Git blobs are LF-normalized by `.gitattributes`, and the verifier separately records deployed payload, working-tree and deployed-source-commit blob byte lengths and SHA-256 values. “Byte-for-byte equal” is asserted only when the compared byte buffers are literally equal.
 
 The complete schema verifier reports 26 actual and 26 expected methods, with no missing or unexpected methods. The live proof verifier confirms archive state, four immutable records, digest bindings, VecDB retrieval without membership mutation, two terminal fail-closed resolution cases, and curator grant/revoke state. No positive `SAME_ENTITY` cluster was claimed: StudioNet validators independently reported that the bound public sources could not be established. No live correction, cluster append/merge, or hosted injected-wallet write was claimed. The existing Direct Mode suite remains the proof for `DETACH_MEMBER` and canonical-label refresh.
 
 Archive 2 was created with the immutable commit-pinned charter but initially used hashes computed from decoded PowerShell text; its positive case therefore failed closed. Archive 3 corrected this by binding the exact stable raw HTTP bytes: Gutenberg 33385 is 913,559 bytes with SHA-256 `20e308f88e199e0ee090bf1bb68d0f9cf959a249b5aa269396a05f1e8c740dae`, and Gutenberg 35418 is 419,142 bytes with SHA-256 `0a1c50383db4e01dbd8ee4c2d66647accb3a4313600894251053f6cd08c65503`. Both were fetched twice with identical bytes. Case 2 finalized with GenVM `SUCCESS` as `SAME_ENTITY`, storing `NAME_ALIAS`, `DATE`, `PLACE` and `ROLE_OCCUPATION`, and deterministically created cluster 1 with records 5 and 6. The old deployment’s fail-closed history and archive 2 remain preserved in the manifest. Direct `preview_candidates` RPC did not return a payload during recovery; the proposal’s frozen candidate context did record record 6, and this is distinguished from a direct preview proof. No live correction detach, cluster append/merge, or hosted-wallet write is claimed.
 
-The original StudioNet deployment later became unavailable and was recovered at the current address with the identical verified contract source. The recovery deployment and archive 3 positive proof are recorded in [`evidence/studionet.json`](./evidence/studionet.json).
+The original StudioNet deployment later became unavailable and was recovered at the current address. The recovery deployment and archive 3 positive proof are recorded in [`evidence/studionet.json`](./evidence/studionet.json). This hardening pass changes contract source, so the old recovery address must not be described as containing this corrected source until a fresh deployment and source-equality check complete.
+
+## Security boundaries and known limits
+
+ArchiveFuse validates non-empty HTTPS URLs with a host-shaped authority, but GenVM web access does not expose a dependable universal network-policy primitive; validators still fail closed on fetch failure, oversize bodies, empty text and digest mismatch. Evidence extraction is bounded at 7,000 normalized characters using deterministic head/tail sampling, so sources should place decisive evidence near the beginning or end. VecDB currently exposes a global bounded `knn(query, k)` operation rather than filtered/offset search; ArchiveFuse filters archive and entity type after the bounded scan and never treats distance as identity proof. This limitation is explicit rather than hidden.
 
 ## Security / privacy boundary
 ArchiveFuse is for public historical material. Contract state and vectors are public. Embeddings are not encryption. The MVP rejects PERSON records later than the archive's configured historical cutoff. Registered browser source previews are sandboxed as untrusted content; consensus independently fetches and verifies source bytes.

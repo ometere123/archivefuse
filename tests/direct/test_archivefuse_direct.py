@@ -33,6 +33,12 @@ def seed_two(c,vm):
     b=record(c,vm,aid,'Ada Cole Smith','https://archive.example/b.txt',b'Ada Cole Smith clerk Market Street 1911',1911)
     return aid,a,b
 
+def detach(c,vm,cluster,record_id,suffix='correction'):
+    url='https://archive.example/'+suffix+'.txt'; body=b'Independent register proves the target was a different person at a different place and role.'; web(vm,url,body)
+    correction=c.propose_correction(cluster,record_id,url,digest(body)); mock_correction(vm,'DETACH_MEMBER',['PLACE','ROLE_OCCUPATION'])
+    assert c.adjudicate_correction(correction)=='DETACH_MEMBER'
+    return correction
+
 def test_archive_record_and_cutoff(direct_vm,direct_deploy):
     c=deploy(direct_deploy); aid=archive(c,direct_vm); body=b'Ada Cole, Market Street, clerk, 1910.'; rid=record(c,direct_vm,aid,'Ada Cole','https://archive.example/a.txt',body)
     assert c.get_record(rid)['cluster_id']==0 and c.get_archive(aid)['record_count']==1
@@ -125,6 +131,37 @@ def test_correction_detach_preserves_record_and_versioned_receipt(direct_vm,dire
     assert c.get_cluster(cluster)['canonical_label']==c.get_record(b)['title']
     receipt=c.get_correction(correction); assert receipt['status']==3 and receipt['decision']=='DETACH_MEMBER' and c.get_cluster(cluster)['member_count']==1
     assert c.get_case(case)['relation']=='SAME_ENTITY' and c.get_case(case)['resulting_cluster']==cluster
+
+def test_detach_then_reattach_restores_active_membership_without_duplicate_history(direct_vm,direct_deploy):
+    c=deploy(direct_deploy); aid,a,b=seed_two(c,direct_vm); first,_=pair(c,direct_vm,aid,a,b); cluster=c.get_case(first)['resulting_cluster']
+    detach(c,direct_vm,cluster,a,'detach-reattach')
+    assert c.list_cluster_members(cluster,0,50)==[b] and c.get_cluster(cluster)['member_count']==1
+    second,outcome=pair(c,direct_vm,aid,a,b); assert outcome=='SAME_ENTITY'
+    row=c.get_cluster(cluster); members=c.list_cluster_members(cluster,0,50)
+    assert c.get_case(second)['resulting_cluster']==cluster and members==[a,b]
+    assert row['member_count']==len(members)==2 and len(set(members))==2 and row['version']==3
+    assert second in c.list_cluster_case_ids(cluster,0,50)
+
+def test_detach_join_another_cluster_then_merge_deduplicates_historical_members(direct_vm,direct_deploy):
+    c=deploy(direct_deploy); aid,a,b=seed_two(c,direct_vm); first,_=pair(c,direct_vm,aid,a,b); first_cluster=c.get_case(first)['resulting_cluster']
+    detach(c,direct_vm,first_cluster,a,'detach-merge')
+    c_record=record(c,direct_vm,aid,'Ada Cole Third','https://archive.example/c.txt',b'Ada Cole Third clerk Market Street 1912',1912)
+    second,_=pair(c,direct_vm,aid,a,c_record); second_cluster=c.get_case(second)['resulting_cluster']; assert second_cluster!=first_cluster
+    merge,_=pair(c,direct_vm,aid,b,c_record); active=c.get_case(merge)['resulting_cluster']; superseded=second_cluster if active==first_cluster else first_cluster
+    members=c.list_cluster_members(active,0,50)
+    assert members==[a,b,c_record] and len(members)==len(set(members))==c.get_cluster(active)['member_count']
+    assert c.get_cluster(superseded)['superseded_by']==active and c.get_cluster(superseded)['member_count']==0
+    assert c.get_record(a)['cluster_id']==c.get_record(b)['cluster_id']==c.get_record(c_record)['cluster_id']==active
+
+def test_repeated_detach_reattach_cycle_preserves_versions_lineage_and_uniqueness(direct_vm,direct_deploy):
+    c=deploy(direct_deploy); aid,a,b=seed_two(c,direct_vm); first,_=pair(c,direct_vm,aid,a,b); cluster=c.get_case(first)['resulting_cluster']
+    detach(c,direct_vm,cluster,a,'cycle-one'); second,_=pair(c,direct_vm,aid,a,b)
+    detach(c,direct_vm,cluster,a,'cycle-two'); third,_=pair(c,direct_vm,aid,a,b)
+    members=c.list_cluster_members(cluster,0,50); row=c.get_cluster(cluster)
+    lineage=c.list_cluster_case_ids(cluster,0,50)
+    assert members==[a,b] and len(members)==len(set(members))==row['member_count']==2
+    assert row['version']==5 and row['last_case_id']==third and second in lineage and third in lineage
+    assert c.get_case(first)['relation']=='SAME_ENTITY' and c.get_correction(1)['decision']=='DETACH_MEMBER'
 
 def test_duplicate_pending_correction_is_rejected(direct_vm,direct_deploy):
     c=deploy(direct_deploy); aid,a,b=seed_two(c,direct_vm); case,_=pair(c,direct_vm,aid,a,b); cluster=c.get_case(case)['resulting_cluster']; url='https://archive.example/correction.txt'; body=b'Correction evidence'; web(direct_vm,url,body)

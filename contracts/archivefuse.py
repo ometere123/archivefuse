@@ -283,7 +283,10 @@ class ArchiveFuse(gl.Contract):
 
     def _public_url(self, value: str, field: str, required: bool = True) -> str:
         url = self._bounded(value, field, MAX_URL, required)
-        if url and not url.startswith("https://"): raise gl.vm.UserError("EXPECTED: " + field + " must use https")
+        if url:
+            host=url[8:].split("/",1)[0] if url.startswith("https://") else ""
+            if not host or any(ch in host for ch in " @?#") or "." not in host or not url.startswith("https://"):
+                raise gl.vm.UserError("EXPECTED: " + field + " must be a public https URL")
         return url
 
     def _digest(self, value: str, field: str, required: bool = True) -> str:
@@ -347,6 +350,23 @@ class ArchiveFuse(gl.Contract):
 
     def _current_cluster(self, record_id: u256) -> u256:
         return self.record_cluster.get(record_id, u256(0))
+
+    def _active_member_ids(self, cluster_id: u256) -> list:
+        """Return unique current members while retaining historical IDs in storage."""
+        active=[]
+        members=self.cluster_members.get(cluster_id)
+        if members is not None:
+            for record_id in members:
+                if self._current_cluster(record_id)==cluster_id and record_id not in active:
+                    active.append(record_id)
+        return active
+
+    def _evidence_excerpt(self, body: bytes) -> str:
+        text=" ".join(body.decode("utf-8","replace").split())
+        if len(text)<=MAX_EVIDENCE_TEXT: return text
+        marker=" ...[bounded middle omitted]... "
+        budget=MAX_EVIDENCE_TEXT-len(marker); head=budget//2; tail=budget-head
+        return text[:head]+marker+text[-tail:]
 
     def _candidate_list(self, record: Record, record_id: u256, limit: int) -> list:
         requested = min(max(int(limit), 1), MAX_CANDIDATES)
@@ -439,7 +459,7 @@ class ArchiveFuse(gl.Contract):
                     if len(body) > MAX_SOURCE_BYTES: return {"ok":False,"text":"[SOURCE_TOO_LARGE]"}
                     actual = "sha256:" + hashlib.sha256(body).hexdigest()
                     if expected_digest and actual != expected_digest: return {"ok":False,"text":"[DIGEST_MISMATCH]"}
-                    text = " ".join(body.decode("utf-8","replace").split())[:MAX_EVIDENCE_TEXT]
+                    text = self._evidence_excerpt(body)
                     if len(text) < 1: return {"ok":False,"text":"[EMPTY_SOURCE]"}
                     return {"ok":True,"text":text}
                 except Exception: return {"ok":False,"text":"[FETCH_UNAVAILABLE]"}
@@ -495,31 +515,37 @@ VECDB CANDIDATE CONTEXT (retrieval only): %s
     def _append_cluster(self, cluster_id: u256, record_id: u256, case_id: u256) -> u256:
         cluster=self._cluster(cluster_id)
         if cluster.superseded_by != u256(0): raise gl.vm.UserError("EXPECTED: cannot append to superseded cluster")
-        if int(cluster.member_count) >= MAX_CLUSTER_MEMBERS: raise gl.vm.UserError("EXPECTED: cluster member limit reached")
         members=self.cluster_members.get_or_insert_default(cluster_id)
+        active=self._active_member_ids(cluster_id)
+        if self._current_cluster(record_id)==cluster_id: return cluster_id
+        if len(active) >= MAX_CLUSTER_MEMBERS: raise gl.vm.UserError("EXPECTED: cluster member limit reached")
+        historical=False
         for existing in members:
-            if existing == record_id: return cluster_id
-        members.append(record_id); self.record_cluster[record_id]=cluster_id; cluster.member_count=u16(int(cluster.member_count)+1); cluster.version=u32(int(cluster.version)+1); cluster.last_case_id=case_id; self.cluster_cases.get_or_insert_default(cluster_id).append(case_id); ClusterExpanded(cluster_id,record_id,case_id=str(case_id)).emit(); return cluster_id
+            if existing == record_id: historical=True; break
+        if not historical: members.append(record_id)
+        self.record_cluster[record_id]=cluster_id; cluster.member_count=u16(len(active)+1); cluster.version=u32(int(cluster.version)+1); cluster.last_case_id=case_id; self.cluster_cases.get_or_insert_default(cluster_id).append(case_id); self._refresh_canonical_label(cluster_id); ClusterExpanded(cluster_id,record_id,case_id=str(case_id)).emit(); return cluster_id
 
     def _merge_clusters(self, a: u256, b: u256, case_id: u256) -> u256:
         if a == b: raise gl.vm.UserError("EXPECTED: records already share a cluster; use correction flow")
         target_id=a if int(a)<int(b) else b; source_id=b if target_id==a else a; target=self._cluster(target_id); source=self._cluster(source_id)
         if target.archive_id != source.archive_id or target.entity_type != source.entity_type: raise gl.vm.UserError("EXPECTED: incompatible clusters")
         if target.superseded_by != u256(0) or source.superseded_by != u256(0): raise gl.vm.UserError("EXPECTED: stale superseded cluster")
-        if int(target.member_count)+int(source.member_count) > MAX_CLUSTER_MEMBERS: raise gl.vm.UserError("EXPECTED: merged cluster would exceed member limit")
-        target_members=self.cluster_members.get_or_insert_default(target_id); source_members=self.cluster_members.get(source_id)
-        if source_members is not None:
-            for record_id in source_members:
-                if self._current_cluster(record_id)==source_id: target_members.append(record_id); self.record_cluster[record_id]=target_id
-        moved=int(source.member_count); target.member_count=u16(int(target.member_count)+moved); target.version=u32(int(target.version)+1); target.last_case_id=case_id; source.member_count=u16(0); source.superseded_by=target_id; source.version=u32(int(source.version)+1); source.last_case_id=case_id
+        target_members=self.cluster_members.get_or_insert_default(target_id); target_active=self._active_member_ids(target_id); source_active=self._active_member_ids(source_id); moved=0
+        if len(target_active)+len(source_active) > MAX_CLUSTER_MEMBERS: raise gl.vm.UserError("EXPECTED: merged cluster would exceed member limit")
+        for record_id in source_active:
+            if record_id not in target_active:
+                historical=False
+                for existing in target_members:
+                    if existing == record_id: historical=True; break
+                if not historical: target_members.append(record_id)
+                target_active.append(record_id); self.record_cluster[record_id]=target_id; moved+=1
+        target.member_count=u16(len(target_active)); target.version=u32(int(target.version)+1); target.last_case_id=case_id; self._refresh_canonical_label(target_id); source.member_count=u16(0); source.superseded_by=target_id; source.version=u32(int(source.version)+1); source.last_case_id=case_id
         self.cluster_cases.get_or_insert_default(target_id).append(case_id); self.cluster_cases.get_or_insert_default(source_id).append(case_id); archive=self._archive(target.archive_id); archive.cluster_count-=ONE; self.active_cluster_count-=ONE; ClusterMerged(target_id,source_id,case_id=str(case_id),moved=str(moved)).emit(); return target_id
 
     def _refresh_canonical_label(self, cluster_id: u256) -> None:
-        cluster=self._cluster(cluster_id); members=self.cluster_members.get(cluster_id)
-        if members is not None:
-            for record_id in members:
-                if self._current_cluster(record_id)==cluster_id:
-                    cluster.canonical_label=self._record(record_id).title; return
+        cluster=self._cluster(cluster_id)
+        for record_id in self._active_member_ids(cluster_id):
+            cluster.canonical_label=self._record(record_id).title; return
         cluster.canonical_label=""
 
     def _settle_same_entity(self, case: ResolutionCase, left: Record, right: Record, case_id: u256) -> u256:
@@ -623,7 +649,7 @@ VECDB CANDIDATE CONTEXT (retrieval only): %s
                     if len(body)>MAX_SOURCE_BYTES: return {"ok":False,"text":""}
                     actual="sha256:"+hashlib.sha256(body).hexdigest()
                     if expected and actual!=expected: return {"ok":False,"text":""}
-                    text=" ".join(body.decode("utf-8","replace").split())[:MAX_EVIDENCE_TEXT]
+                    text=self._evidence_excerpt(body)
                     if len(text)<1: return {"ok":False,"text":""}
                     return {"ok":True,"text":text}
                 except Exception: return {"ok":False,"text":""}
@@ -747,9 +773,7 @@ CORRECTION EVIDENCE: %s
     def list_cluster_members(self, cluster_id: u256, offset: int, limit: int) -> list:
         self._cluster(cluster_id)
         if offset<0 or limit<1 or limit>MAX_PAGE: raise gl.vm.UserError("EXPECTED: invalid pagination")
-        values=self.cluster_members.get(cluster_id)
-        if values is None: return []
-        active=[int(record_id) for record_id in values if self._current_cluster(record_id)==cluster_id]; return active[offset:min(len(active),offset+limit)]
+        active=[int(record_id) for record_id in self._active_member_ids(cluster_id)]; return active[offset:min(len(active),offset+limit)]
 
     @gl.public.view
     def list_cluster_case_ids(self, cluster_id: u256, offset: int, limit: int) -> list:

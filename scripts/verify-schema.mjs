@@ -16,4 +16,4 @@ const missing=required.filter(x=>!actual.includes(x));
 const unexpected=actual.filter(x=>!required.includes(x));
 const result={address,actualMethodCount:actual.length,expectedMethodCount:required.length,missing,unexpected};
 console.log(JSON.stringify(result,null,2));
-if(missing.length||actual.length!==required.length)process.exit(1);
+if(missing.length||unexpected.length||actual.length!==required.length)process.exit(1);

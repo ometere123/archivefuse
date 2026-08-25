@@ -59,3 +59,12 @@ What remains unproven:
 
 ## Release handoff
 The source fix, runtime verification, CI confirmation, original deployment, same-source StudioNet recovery deployment, schema verification and Vercel frontend deployment are complete on the deployed source commit above. The old address failed schema/code/state checks with `Contract not deployed` and `invalid_contract absent_runner_comment`; this is recorded as StudioNet state loss. A hosted injected-wallet write remains unexercised by this agent.
+
+## Final hardening pass
+The contract now projects unique active membership from retained historical IDs. A detached record can reattach to its prior cluster without a duplicate historical entry; merge-back deduplicates target history, recomputes active counts, advances version/lineage and refreshes the canonical label. Direct Mode regressions cover detach→reattach, detach→join another cluster→merge-back and repeated correction cycles. The local suite is now 55/55.
+
+The source reproducibility discrepancy was confirmed rather than hand-waved: the old deployed/repository working-tree payload was 53,004 CRLF bytes, while the Git blob at source commit `61f98e50c4f4cc8aa952c26fc3182226f4933762` was 52,248 LF bytes. The corrected source is LF-normalized and `.gitattributes` pins `contracts/archivefuse.py` to LF. `scripts/exercise-studionet.mjs` now reports deployed payload, working-tree and source-commit Git-blob hashes separately and only asserts literal equality for the actual compared buffers.
+
+This pass changes contract source, so the prior address `0xB676A1bF06811A093448F7ad39D8Fa65B075fC39` is not claimed to contain the fix. The installed Windows environment currently has no `genlayer` CLI executable and WSL is unavailable (`E_ACCESSDENIED`), so fresh deployment is an external blocker. Do not update `DEPLOYMENT.json` to the corrected source or claim live corrected lifecycle proof until a supported CLI/account deploys and verifies it.
+
+VecDB remains explicitly bounded: current GenVM exposes global `knn(query,k)` without archive/type filter or offset, so the contract filters after `MAX_KNN_SCAN=24`; unrelated vectors can crowd that bounded retrieval window. Similarity remains retrieval-only. Evidence prompts now use deterministic bounded head/tail sampling within 7,000 normalized characters. URL validation remains HTTPS/host-shaped rather than a claimed universal SSRF firewall. Permissionless proposals and duplicate pending guards remain an intentional open-network spam trade-off.

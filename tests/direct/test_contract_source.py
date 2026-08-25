@@ -1,7 +1,7 @@
 from pathlib import Path
-import ast,re
+import ast,json,re
 ROOT=Path(__file__).resolve().parents[2]; SOURCE=ROOT/'contracts'/'archivefuse.py'; TEXT=SOURCE.read_text(encoding='utf-8'); TREE=ast.parse(TEXT)
-REQUIRED={'create_archive','set_curator','register_record','preview_candidates','propose_resolution','adjudicate_resolution','invalidate_stale_resolution','get_archive','get_record','get_case','get_cluster','get_record_cluster','list_archive_ids','list_record_ids','list_case_ids','list_cluster_members','list_cluster_case_ids','stats','is_curator','preview_correction_context','propose_correction','adjudicate_correction','invalidate_stale_correction','get_correction','list_correction_ids','list_cluster_correction_ids'}
+REQUIRED=set(json.loads((ROOT/'lib'/'genlayer'/'required-methods.json').read_text(encoding='utf-8')))
 def methods():
     for node in TREE.body:
         if isinstance(node,ast.ClassDef) and node.name=='ArchiveFuse': return {n.name for n in node.body if isinstance(n,ast.FunctionDef)}
@@ -13,7 +13,7 @@ def method_source(name):
                 if isinstance(item,ast.FunctionDef) and item.name==name:
                     return ast.get_source_segment(TEXT,item) or ''
     raise AssertionError(name)
-def test_contract_parses_and_has_hardened_public_surface(): assert REQUIRED<=methods()
+def test_contract_parses_and_has_hardened_public_surface(): assert REQUIRED<=methods() and len(REQUIRED)==26
 def test_no_backend_or_fixture_language_in_contract():
     low=TEXT.lower()
     for x in ('supabase','firebase','postgres','mock_data','fixture_data'): assert x not in low
@@ -38,6 +38,8 @@ def test_stale_resolution_has_deterministic_terminal_path():
     assert 'CASE_STALE' in src and 'REL_STALE' in src and '_clear_pending_pair' in src
 def test_public_sources_are_digest_bound_and_bounded():
     assert 'hashlib.sha256(body).hexdigest()' in TEXT and '[DIGEST_MISMATCH]' in TEXT and 'MAX_SOURCE_BYTES' in TEXT and 'SOURCE_TOO_LARGE' in TEXT
+    assert '_evidence_excerpt(body)' in TEXT and 'bounded middle omitted' in TEXT
+    assert 'must be a public https URL' in method_source('_public_url')
 def test_versioned_correction_path_preserves_history():
     assert 'class CorrectionCase' in TEXT and 'DETACH_MEMBER' in TEXT and 'self.record_cluster[correction.record_id]=u256(0)' in TEXT.replace(' ','') and 'CorrectionAdjudicated' in TEXT
 def test_correction_context_is_frozen_at_proposal():
@@ -54,4 +56,7 @@ def test_views_do_not_insert_storage_defaults():
 def test_cluster_merge_zeroes_superseded_membership_and_tracks_active_count():
     merge=method_source('_merge_clusters')
     assert 'source.member_count=u16(0)' in merge.replace(' ','') and 'active_cluster_count' in merge and 'archive.cluster_count-=ONE' in merge.replace(' ','')
+    append=method_source('_append_cluster')
+    assert '_active_member_ids' in append and 'historical' in append and 'ClusterExpanded' in append
+    assert '_active_member_ids' in method_source('list_cluster_members')
 def test_no_money_movement_surface(): assert '.payable' not in TEXT and 'emit_transfer' not in TEXT and 'gl.message.value' not in TEXT
